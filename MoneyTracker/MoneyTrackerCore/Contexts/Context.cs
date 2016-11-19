@@ -23,9 +23,11 @@ namespace MoneyTrackerDataModel.Contexts
 
         public DbSet<Entities.AutoAllocation> AutoAllocations { get; set; }
 
-        //public Context()
-        //{
-        //    //Database.SetInitializer<Context>(null);
-        //}
+        public Context(string nameOrConnStr) 
+            : base(nameOrConnStr)
+        {
+            //Database.Connection.ConnectionString = nameOrConnStr;
+            //Database.SetInitializer<Context>(null);
+        }
     }
 }

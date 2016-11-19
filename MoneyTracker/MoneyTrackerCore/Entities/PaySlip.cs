@@ -15,25 +15,26 @@ namespace MoneyTrackerDataModel.Entities
 
         public int EmployerId { get; set; }
 
+        [Column(TypeName = "Date")]
         public DateTime Date { get; set; }
 
         public decimal Basic { get; set; }
 
-        public decimal SspSmpSpp { get; set; }
+        public decimal? SspSmpSpp { get; set; }
 
-        public decimal Overtime { get; set; }
+        public decimal? Overtime { get; set; }
 
-        public decimal Bonus { get; set; }
+        public decimal? Bonus { get; set; }
 
-        public decimal UnpaidPay { get; set; }
+        public decimal? UnpaidPay { get; set; }
 
         public decimal Tax { get; set; }
 
         public decimal NationalInsurance { get; set; }
 
-        public decimal Pension { get; set; }
+        public decimal? Pension { get; set; }
 
-        public decimal StudentLoan { get; set; }
+        public decimal? StudentLoan { get; set; }
 
         public decimal Net { get; set; }
 

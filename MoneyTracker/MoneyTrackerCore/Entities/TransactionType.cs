@@ -13,7 +13,7 @@ namespace MoneyTrackerDataModel.Entities
         public int TypeId { get; set; }
 
         [Required]
-        [MaxLength(3)]
+        [MaxLength(50)]
         public string Description { get; set; }
 
         public bool Obsolete { get; set; }

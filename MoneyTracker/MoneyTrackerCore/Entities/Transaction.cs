@@ -17,8 +17,9 @@ namespace MoneyTrackerDataModel.Entities
 
         public int CategoryId { get; set; }
 
-        public int TypeId { get; set; }
+        public int? TypeId { get; set; }
 
+        [Column(TypeName = "Date")]
         public DateTime Date { get; set; }
 
         [MaxLength(200)]

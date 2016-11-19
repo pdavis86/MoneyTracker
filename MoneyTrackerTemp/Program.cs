@@ -5,15 +5,24 @@ using System.Text;
 using System.Threading.Tasks;
 using MoneyTrackerDataModel.Contexts;
 using MoneyTrackerDataModel.Entities;
+using System.Data.SqlClient;
 
 namespace MoneyTrackerTemp
 {
     class Program
     {
+
+        static string _connStr;
+
         static void Main(string[] args)
         {
-            //Connect to (localdb)\mssqllocaldb to see what gets inserted
-            InsertSomeData();
+
+            _connStr = "name=Testing Database";
+            //_connStr = "name=Personal Database";
+            //SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(GetConnectionString());
+            //_connStr = builder.ToString();
+
+            //InsertSomeData();
             GetSomeData();
             Console.WriteLine("Press any key to exit...");
             Console.ReadKey(true);
@@ -23,7 +32,7 @@ namespace MoneyTrackerTemp
         {
             try
             {
-                bool insertCategories = false;
+                bool setupAdminTables = false;
 
                 var transaction1 = new Transaction
                 {
@@ -44,10 +53,12 @@ namespace MoneyTrackerTemp
                     Value = 2
                 };
 
-                using (var db = new Context())
+                using (var db = new Context(_connStr))
                 {
-                    if (insertCategories)
+                    if (setupAdminTables)
                     {
+                        db.Accounts.Add(new Account { AccountId = 1, Description = "My Account" });
+                        db.TransactionTypes.Add(new TransactionType { TypeId = 1, Description = "My Type" });
                         db.Categories.Add(new TransactionCategory { Description = "Category 1" });
                         db.Categories.Add(new TransactionCategory { Description = "Category 2" });
                         db.SaveChanges();
@@ -58,23 +69,42 @@ namespace MoneyTrackerTemp
                 }
 
             }
-            catch (System.Data.Entity.Infrastructure.DbUpdateException ex)
+            catch (System.Data.Entity.Validation.DbEntityValidationException ex1)
             {
-                var actualException = ex.InnerException.InnerException;
+                foreach (var eve in ex1.EntityValidationErrors)
+                {
+                    foreach (var ve in eve.ValidationErrors)
+                    {
+                        var face = eve.Entry.Entity.ToString() + " had error: " + ve.ErrorMessage;
+                    }
+                }
+
+            }
+            catch (System.Data.Entity.Infrastructure.DbUpdateException ex2)
+            {
+                var actualException = ex2.InnerException.InnerException;
                 System.Diagnostics.Debugger.Break();
             }
         }
 
         static void GetSomeData()
         {
-            using (var db = new Context())
+            using (var db = new Context(_connStr))
             {
-                var query = from t in db.Transactions orderby t.TransactionId select t;
-                foreach (var row in query)
+                try
                 {
-                    //Console.WriteLine(row.TransactionId);
-                    Console.WriteLine(row.Category.CategoryId);
+                    var query = (from t in db.Transactions orderby t.TransactionId select t).ToList(); //.ToList() is necessary to avoid recalling the query
+                    foreach (var row in query)
+                    {
+                        Console.WriteLine(row.TransactionId);
+                        //Console.WriteLine(row.Category.CategoryId);
+                    }
                 }
+                catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
+                {
+                    var actualException = ex.InnerException;
+                }
+
             }
         }
     }
