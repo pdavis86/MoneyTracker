@@ -57,10 +57,10 @@
             // btnFindFile
             // 
             this.btnFindFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnFindFile.Location = new System.Drawing.Point(803, 11);
+            this.btnFindFile.Location = new System.Drawing.Point(800, 11);
             this.btnFindFile.Margin = new System.Windows.Forms.Padding(2);
             this.btnFindFile.Name = "btnFindFile";
-            this.btnFindFile.Size = new System.Drawing.Size(22, 19);
+            this.btnFindFile.Size = new System.Drawing.Size(25, 19);
             this.btnFindFile.TabIndex = 7;
             this.btnFindFile.Text = "...";
             this.btnFindFile.UseVisualStyleBackColor = true;
@@ -74,7 +74,7 @@
             this.txtImportFile.Margin = new System.Windows.Forms.Padding(2);
             this.txtImportFile.Name = "txtImportFile";
             this.txtImportFile.ReadOnly = true;
-            this.txtImportFile.Size = new System.Drawing.Size(788, 20);
+            this.txtImportFile.Size = new System.Drawing.Size(785, 20);
             this.txtImportFile.TabIndex = 6;
             // 
             // btnImport

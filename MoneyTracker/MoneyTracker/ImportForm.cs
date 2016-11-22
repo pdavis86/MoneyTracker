@@ -72,6 +72,7 @@ namespace MoneyTracker
                 if (openDialog.ShowDialog() != DialogResult.Cancel)
                 {
                     txtImportFile.Text = openDialog.FileName;
+                    this.Refresh();
 
                     //Read file format from the header line
                     using (StreamReader lo_reader = new StreamReader(openDialog.FileName))
@@ -83,6 +84,7 @@ namespace MoneyTracker
                         } while (string.IsNullOrWhiteSpace(ls_lineText));
                         if (ls_lineText.StartsWith("From:"))
                         {
+                            //todo: load on a separate thread and show progress
                             LoadDataFromSantander(lo_reader);
                         }
                         else
@@ -153,6 +155,13 @@ namespace MoneyTracker
             } while (reader.EndOfStream == false);
 
             grdDataView.DataSource = transList;
+            grdDataView.Columns["TransactionId"].Visible = false;
+            grdDataView.Columns["AccountId"].Visible = false;
+            grdDataView.Columns["CategoryId"].Visible = false;
+            grdDataView.Columns["TypeId"].Visible = false;
+            grdDataView.Columns["Account"].DisplayIndex = 0;
+            grdDataView.Columns["Category"].DisplayIndex = 1;
+            grdDataView.Columns["Type"].DisplayIndex = 2;
             grdDataView.Rows[0].Selected = true;
         }
 
@@ -163,24 +172,21 @@ namespace MoneyTracker
                 try
                 {
                     var query = (from aa in db.AutoAllocations select aa).ToList(); //ToList() is necessary to avoid recalling the query
-                    foreach (var row in query)
+                    foreach (var autoAlloc in query)
                     {
                         for (int li_row = 0; li_row <= grdDataView.Rows.Count - 1; li_row++)
                         {
-                            var lo_cellValue = grdDataView.Rows[li_row].Cells[row.GridColumnName].Value;
-                            //if (lo_cellValue == null)
-                            //{
-                            //    lo_cellValue = string.Empty;
-                            //}
-                            if (PatternMatch(lo_cellValue.ToString(), row.GridDataPattern))
+                            var lo_cellValue = grdDataView.Rows[li_row].Cells[autoAlloc.GridColumnName].Value;
+                            if (PatternMatch(lo_cellValue.ToString(), autoAlloc.GridDataPattern))
                             {
-                                grdDataView.Rows[li_row].Cells[row.UpdateColumnName].Value = row.UpdateDataValue;
+                                grdDataView.Rows[li_row].Cells[autoAlloc.UpdateColumnName].Value = autoAlloc.UpdateDataValue;
                             }
                         }
                     }
                 }
                 catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
                 {
+                    //todo:
                     var actualException = ex.InnerException;
                 }
 
