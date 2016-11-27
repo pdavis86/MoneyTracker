@@ -76,6 +76,7 @@
             this.txtImportFile.ReadOnly = true;
             this.txtImportFile.Size = new System.Drawing.Size(785, 20);
             this.txtImportFile.TabIndex = 6;
+            this.txtImportFile.TabStop = false;
             // 
             // btnImport
             // 

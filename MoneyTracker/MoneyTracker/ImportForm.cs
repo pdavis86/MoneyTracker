@@ -31,14 +31,14 @@ namespace MoneyTracker
 
         private void ImportForm_Load(object sender, EventArgs e)
         {
-            //SetControlDefaults();
         }
 
         private void btnFindFile_Click(object sender, EventArgs e)
         {
+            BuildGrid();
             LoadSourceData();
+            ModifyGrid();
             AutoAssignValues();
-
         }
 
         private void btnImport_Click(object sender, EventArgs e)
@@ -52,22 +52,12 @@ namespace MoneyTracker
 
         #endregion
 
-        private void SetControlDefaults()
-        {
-            grdDataView.RowHeadersVisible = false;
-            grdDataView.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            grdDataView.Rows.Clear();
-            grdDataView.Columns.Clear();
-
-            openDialog.Filter = "Text Files|*.txt|CSV files|*.csv";
-            //openDialog.ValidateNames = false;
-        }
-
         private void LoadSourceData()
         {
             try
             {
-                SetControlDefaults();
+                openDialog.Filter = "Text Files|*.txt|CSV files|*.csv";
+                //openDialog.ValidateNames = false;
 
                 if (openDialog.ShowDialog() != DialogResult.Cancel)
                 {
@@ -99,6 +89,52 @@ namespace MoneyTracker
                 var dosomething = ex.ToString();
                 //todo:
             }
+        }
+
+        private void BuildGrid()
+        {
+            //grdDataView.AutoGenerateColumns = false;
+
+            grdDataView.RowHeadersVisible = false;
+            grdDataView.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter; //todo: why doesn't this work? 
+            grdDataView.Rows.Clear();
+            grdDataView.Columns.Clear();
+
+            //var transTypeCombo = GetTranstypeCombo();
+
+            //foreach (var prop in typeof(Transaction).GetProperties())
+            //{
+            //    switch (prop.Name)
+            //    {
+            //        case "Category":
+            //            grdDataView.Columns.Add(new DataGridViewComboBoxColumn()
+            //            {
+            //                Name = prop.Name,
+            //                HeaderText = prop.Name,
+            //                CellTemplate = transTypeCombo
+            //            });
+            //            break;
+
+            //        default:
+            //            grdDataView.Columns.Add(prop.Name, prop.Name);
+            //            break;
+            //    }
+            //    if (prop.Name == "Value" || prop.Name == "Balance")
+            //    {
+            //        grdDataView.Columns[prop.Name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            //    }
+            //    //todo: grdDataView.Columns[prop.Name].ReadOnly = true;
+            //    //todo: why doesn't this work? - grdDataView.Columns[prop.Name].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //}
+
+            //grdDataView.Columns["TransactionId"].Visible = false;
+            //grdDataView.Columns["AccountId"].Visible = false;
+            //grdDataView.Columns["CategoryId"].Visible = false;
+            //grdDataView.Columns["TypeId"].Visible = false;
+
+            //grdDataView.Columns["Account"].DisplayIndex = 0;
+            //grdDataView.Columns["Category"].DisplayIndex = 1;
+            //grdDataView.Columns["Type"].DisplayIndex = 2;
         }
 
         private void LoadDataFromSantander(StreamReader reader)
@@ -155,14 +191,54 @@ namespace MoneyTracker
             } while (reader.EndOfStream == false);
 
             grdDataView.DataSource = transList;
-            grdDataView.Columns["TransactionId"].Visible = false;
-            grdDataView.Columns["AccountId"].Visible = false;
-            grdDataView.Columns["CategoryId"].Visible = false;
-            grdDataView.Columns["TypeId"].Visible = false;
-            grdDataView.Columns["Account"].DisplayIndex = 0;
-            grdDataView.Columns["Category"].DisplayIndex = 1;
-            grdDataView.Columns["Type"].DisplayIndex = 2;
+        }
+
+        private void ModifyGrid()
+        {
+            //todo: grdDataView.Columns["TransactionId"].Visible = false;
+            //todo: grdDataView.Columns["AccountId"].Visible = false;
+            //todo: grdDataView.Columns["CategoryId"].Visible = false;
+            //todo: grdDataView.Columns["TypeId"].Visible = false;
+            grdDataView.Columns["Balance"].Visible = false;
+            grdDataView.Columns["Account"].Visible = false;
+            grdDataView.Columns["Category"].Visible = false;
+            grdDataView.Columns["Type"].Visible = false;
+
+            grdDataView.Columns["Date"].ReadOnly = true;
+            grdDataView.Columns["Description"].ReadOnly = true;
+            grdDataView.Columns["Value"].ReadOnly = true;
+
+            grdDataView.Columns.Add(new DataGridViewComboBoxColumn()
+            {
+                Name = "CategoryCombo",
+                HeaderText = "Category",
+                DisplayIndex = 1,
+                CellTemplate = GetTransCategCombo()
+            });
+
+            grdDataView.Columns.Add(new DataGridViewComboBoxColumn()
+            {
+                Name = "TypeCombo",
+                HeaderText = "Type",
+                DisplayIndex = 2,
+                CellTemplate = GetTranstypeCombo()
+            });
+
+            //grdDataView.Columns["Account"].DisplayIndex = 0;
+
             grdDataView.Rows[0].Selected = true;
+        }
+
+        private int GetComboItemIndex(DataGridViewComboBoxCell combo, string lookup)
+        {
+            for (int li_counter = 0; li_counter <= combo.Items.Count - 1; li_counter++)
+            {
+                if (((TransactionCategory)combo.Items[li_counter]).CategoryId.Equals(Int32.Parse(lookup)))
+                {
+                    return li_counter;
+                }
+            }
+            return -1;
         }
 
         private void AutoAssignValues()
@@ -177,9 +253,18 @@ namespace MoneyTracker
                         for (int li_row = 0; li_row <= grdDataView.Rows.Count - 1; li_row++)
                         {
                             var lo_cellValue = grdDataView.Rows[li_row].Cells[autoAlloc.GridColumnName].Value;
-                            if (PatternMatch(lo_cellValue.ToString(), autoAlloc.GridDataPattern))
+                            if (lo_cellValue != null && PatternMatch(lo_cellValue.ToString(), autoAlloc.GridDataPattern))
                             {
                                 grdDataView.Rows[li_row].Cells[autoAlloc.UpdateColumnName].Value = autoAlloc.UpdateDataValue;
+                                if (autoAlloc.UpdateColumnName == "CategoryId")
+                                {
+                                    var lo_thisCombo = (DataGridViewComboBoxCell)grdDataView.Rows[li_row].Cells["CategoryCombo"];
+                                    lo_thisCombo.Value = lo_thisCombo.Items[GetComboItemIndex(lo_thisCombo, autoAlloc.UpdateDataValue)];
+                                }
+                                else if (autoAlloc.UpdateColumnName == "TypeId")
+                                {
+                                    grdDataView.Rows[li_row].Cells["TypeCombo"].Value = autoAlloc.UpdateDataValue;
+                                }
                             }
                         }
                     }
@@ -212,6 +297,34 @@ namespace MoneyTracker
                 }
                 return dataValue.StartsWith(matchValue);
             }
+        }
+
+        private DataGridViewComboBoxCell GetTranstypeCombo()
+        {
+            DataGridViewComboBoxCell lo_return = new DataGridViewComboBoxCell();
+            using (var db = new Context(_connStr))
+            {
+                var query = (from t in db.TransactionTypes orderby t.Description select t).ToList(); //.ToList() is necessary to avoid recalling the query
+                foreach (var row in query)
+                {
+                    lo_return.Items.Add(new Entities.Type { TypeId = row.TypeId, Description = row.Description });
+                }
+            }
+            return lo_return;
+        }
+
+        private DataGridViewComboBoxCell GetTransCategCombo()
+        {
+            DataGridViewComboBoxCell lo_return = new DataGridViewComboBoxCell();
+            using (var db = new Context(_connStr))
+            {
+                var query = (from t in db.Categories orderby t.Description select t).ToList(); //.ToList() is necessary to avoid recalling the query
+                foreach (var row in query)
+                {
+                    lo_return.Items.Add( new Entities.Category() { CategoryId = row.CategoryId, Description = row.Description });
+                }
+            }
+            return lo_return;
         }
 
         private bool WriteToDatabase()
