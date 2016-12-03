@@ -19,6 +19,7 @@ namespace MoneyTracker
         //private string _connStr = @"Data Source=.\SQLEXPRESS;Initial Catalog=personal;Integrated Security=True;MultipleActiveResultSets=True"; //todo: move this
         private string _connStr = @"Data Source=.\SQLEXPRESS;Initial Catalog=testing;Integrated Security=True;MultipleActiveResultSets=True";
         private OpenFileDialog openDialog = new OpenFileDialog();
+        private Dictionary<int, string> _comboColumnMappings;
 
         #region Constructor
         public ImportForm()
@@ -39,6 +40,9 @@ namespace MoneyTracker
             LoadSourceData();
             ModifyGrid();
             AutoAssignValues();
+            grdDataView.CurrentCellDirtyStateChanged += new EventHandler(dataGridView1_CurrentCellDirtyStateChanged);
+            grdDataView.CellValueChanged += new DataGridViewCellEventHandler(grdDataView_CellValueChanged);
+
         }
 
         private void btnImport_Click(object sender, EventArgs e)
@@ -47,6 +51,30 @@ namespace MoneyTracker
             {
                 MessageBox.Show("Data Imported", "Import Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.Close();
+            }
+        }
+
+        void dataGridView1_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (grdDataView.IsCurrentCellDirty)
+            {
+                // This fires the cell value changed handler below
+                grdDataView.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            }
+        }
+
+        private void grdDataView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (_comboColumnMappings.ContainsKey(e.ColumnIndex))
+            {
+                DataGridViewComboBoxCell cb = (DataGridViewComboBoxCell)grdDataView.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                if (cb.Value != null)
+                {
+                    if (grdDataView.Rows[e.RowIndex].Cells[_comboColumnMappings[e.ColumnIndex]].Value?.ToString() != cb.Value.ToString())
+                    {
+                        grdDataView.Rows[e.RowIndex].Cells[_comboColumnMappings[e.ColumnIndex]].Value = cb.Value;
+                    }
+                }
             }
         }
 
@@ -195,7 +223,7 @@ namespace MoneyTracker
 
         private void ModifyGrid()
         {
-            //todo: grdDataView.Columns["TransactionId"].Visible = false;
+            grdDataView.Columns["TransactionId"].Visible = false;
             //todo: grdDataView.Columns["AccountId"].Visible = false;
             //todo: grdDataView.Columns["CategoryId"].Visible = false;
             //todo: grdDataView.Columns["TypeId"].Visible = false;
@@ -226,19 +254,11 @@ namespace MoneyTracker
 
             //grdDataView.Columns["Account"].DisplayIndex = 0;
 
-            grdDataView.Rows[0].Selected = true;
-        }
+            _comboColumnMappings = new Dictionary<int, string>();
+            _comboColumnMappings.Add(grdDataView.Columns["CategoryCombo"].Index, "CategoryId");
+            _comboColumnMappings.Add(grdDataView.Columns["TypeCombo"].Index, "TypeId");
 
-        private int GetComboItemIndex(DataGridViewComboBoxCell combo, string lookup)
-        {
-            for (int li_counter = 0; li_counter <= combo.Items.Count - 1; li_counter++)
-            {
-                if (((TransactionCategory)combo.Items[li_counter]).CategoryId.Equals(Int32.Parse(lookup)))
-                {
-                    return li_counter;
-                }
-            }
-            return -1;
+            grdDataView.Rows[0].Selected = true;
         }
 
         private void AutoAssignValues()
@@ -258,12 +278,11 @@ namespace MoneyTracker
                                 grdDataView.Rows[li_row].Cells[autoAlloc.UpdateColumnName].Value = autoAlloc.UpdateDataValue;
                                 if (autoAlloc.UpdateColumnName == "CategoryId")
                                 {
-                                    var lo_thisCombo = (DataGridViewComboBoxCell)grdDataView.Rows[li_row].Cells["CategoryCombo"];
-                                    lo_thisCombo.Value = lo_thisCombo.Items[GetComboItemIndex(lo_thisCombo, autoAlloc.UpdateDataValue)];
+                                    grdDataView.Rows[li_row].Cells["CategoryCombo"].Value = int.Parse(autoAlloc.UpdateDataValue);
                                 }
                                 else if (autoAlloc.UpdateColumnName == "TypeId")
                                 {
-                                    grdDataView.Rows[li_row].Cells["TypeCombo"].Value = autoAlloc.UpdateDataValue;
+                                    grdDataView.Rows[li_row].Cells["TypeCombo"].Value = int.Parse(autoAlloc.UpdateDataValue);
                                 }
                             }
                         }
@@ -302,13 +321,11 @@ namespace MoneyTracker
         private DataGridViewComboBoxCell GetTranstypeCombo()
         {
             DataGridViewComboBoxCell lo_return = new DataGridViewComboBoxCell();
+            lo_return.DisplayMember = "Description";
+            lo_return.ValueMember = "TypeId";
             using (var db = new Context(_connStr))
             {
-                var query = (from t in db.TransactionTypes orderby t.Description select t).ToList(); //.ToList() is necessary to avoid recalling the query
-                foreach (var row in query)
-                {
-                    lo_return.Items.Add(new Entities.Type { TypeId = row.TypeId, Description = row.Description });
-                }
+                lo_return.DataSource = (from t in db.TransactionTypes orderby t.Description select t).ToList();
             }
             return lo_return;
         }
@@ -316,13 +333,11 @@ namespace MoneyTracker
         private DataGridViewComboBoxCell GetTransCategCombo()
         {
             DataGridViewComboBoxCell lo_return = new DataGridViewComboBoxCell();
+            lo_return.DisplayMember = "Description";
+            lo_return.ValueMember = "CategoryId";
             using (var db = new Context(_connStr))
             {
-                var query = (from t in db.Categories orderby t.Description select t).ToList(); //.ToList() is necessary to avoid recalling the query
-                foreach (var row in query)
-                {
-                    lo_return.Items.Add( new Entities.Category() { CategoryId = row.CategoryId, Description = row.Description });
-                }
+                lo_return.DataSource = (from t in db.Categories orderby t.Description select t).ToList();
             }
             return lo_return;
         }
