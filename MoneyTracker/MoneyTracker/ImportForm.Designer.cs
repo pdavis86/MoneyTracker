@@ -100,7 +100,6 @@
             this.Controls.Add(this.txtImportFile);
             this.Name = "ImportForm";
             this.Text = "ImportForm";
-            this.Load += new System.EventHandler(this.ImportForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.grdDataView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
