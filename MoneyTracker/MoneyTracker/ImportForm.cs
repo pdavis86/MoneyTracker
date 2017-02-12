@@ -8,6 +8,7 @@ namespace MoneyTracker
 {
     public partial class ImportForm : Form
     {
+        public int AccountId { get; set; }
 
         private OpenFileDialog openDialog = new OpenFileDialog();
 
@@ -15,8 +16,6 @@ namespace MoneyTracker
         public ImportForm()
         {
             InitializeComponent();
-            //private string _connStr = @"Data Source=.\SQLEXPRESS;Initial Catalog=personal;Integrated Security=True;MultipleActiveResultSets=True"; 
-            Controller.SetDataSource(@"Data Source=.\SQLEXPRESS;Initial Catalog=testing;Integrated Security=True;MultipleActiveResultSets=True"); //todo: where should this come from?
         }
         #endregion
 
@@ -186,10 +185,10 @@ namespace MoneyTracker
                             grdDataView.Rows[rowNum].Cells["Description"].Value = lineText.Substring(13);
                             break;
                         case "Amoun":
-                            grdDataView.Rows[rowNum].Cells["Value"].Value = decimal.Parse(lineText.Substring(8, lineText.IndexOf(" ")));
+                            grdDataView.Rows[rowNum].Cells["Value"].Value = decimal.Parse(lineText.Substring(8).Replace(" GBP",""));
                             break;
                         case "Balan":
-                            grdDataView.Rows[rowNum].Cells["Balance"].Value = decimal.Parse(lineText.Substring(9, lineText.IndexOf(" ")));
+                            grdDataView.Rows[rowNum].Cells["Balance"].Value = decimal.Parse(lineText.Substring(9).Replace(" GBP", "")); 
                             break;
                     }
                 }
@@ -230,10 +229,12 @@ namespace MoneyTracker
 
         private bool PatternMatch(string dataValue, string matchPattern)
         {
+            dataValue = dataValue.ToLower();
+            matchPattern = matchPattern.ToLower();
             string matchValue = matchPattern.Replace("*", "");
             if (!matchPattern.Contains("*"))
             {
-                return dataValue.Equals(matchValue, StringComparison.OrdinalIgnoreCase);
+                return dataValue.Equals(matchValue);
             }
             else
             {
@@ -280,9 +281,9 @@ namespace MoneyTracker
             {
                 transData.Add(new Transaction
                 {
-                    AccountId = 4, //todo: improve hard-coded account ID
-                    CategoryId = int.Parse(row.Cells["CategoryId"].Value.ToString()),
-                    TypeId = (row.Cells["TypeId"].Value != null ? int.Parse(row.Cells["TypeId"].Value.ToString()) : (int?)null),
+                    AccountId = this.AccountId, 
+                    CategoryId = row.Cells["CategoryId"].Value != null ? int.Parse(row.Cells["CategoryId"].Value.ToString()) : (int?)null,
+                    TypeId = row.Cells["TypeId"].Value != null ? int.Parse(row.Cells["TypeId"].Value.ToString()) : (int?)null,
                     Date = DateTime.Parse(row.Cells["Date"].Value.ToString()),
                     Description = row.Cells["Description"].Value.ToString(),
                     Value = decimal.Parse(row.Cells["Value"].Value.ToString()),

@@ -1,12 +1,16 @@
 ﻿using MoneyTrackerDataModel.Contexts;
 using MoneyTrackerDataModel.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace MoneyTracker
 {
     static class Controller
     {
+
+        public const string DATEFORMAT_DISPLAY = "dd/MM/yyyy";
 
         private static string _connStr;
 
@@ -21,7 +25,7 @@ namespace MoneyTracker
             {
                 //return (from aa in db.AutoAllocations select aa).ToList();
                 //return db.AutoAllocations.Select(aa => aa).ToList();
-                return db.AutoAllocations.ToList(); 
+                return db.AutoAllocations.ToList();
 
                 //try
                 //{
@@ -51,13 +55,21 @@ namespace MoneyTracker
             }
         }
 
+        public static List<Account> GetAccounts()
+        {
+            using (var db = new Context(_connStr))
+            {
+                return db.Accounts.ToList();
+            }
+        }
+
         public static bool WriteToDatabase(List<Transaction> transData)
         {
             try
             {
                 using (var db = new Context(_connStr))
                 {
-                    foreach(Transaction trans in transData)
+                    foreach (Transaction trans in transData)
                     {
                         db.Transactions.Add(trans);
                     }
@@ -81,6 +93,30 @@ namespace MoneyTracker
                 System.Diagnostics.Debugger.Break();
             }
             return false;
+        }
+
+        //public static List<Transaction> GetTransactions(Expression<Func<Transaction,bool>> predicate)
+        //{
+        //    using (var db = new Context(_connStr))
+        //    {
+        //        return db.Transactions..Where(predicate).ToList();
+        //    }
+        //}
+
+        public static DateTime? GetMaxTransactionDate(int accountId)
+        {
+            using (var db = new Context(_connStr))
+            {
+                var trans = db.Transactions.Where(t => t.AccountId == accountId);
+                if (trans.Count() > 0 )
+                {
+                    return trans.Max(t => t.Date);
+                }
+                else
+                {
+                    return null;
+                }
+            }
         }
 
     }

@@ -58,12 +58,21 @@
     <Compile Include="Entities\TransactionCategory.cs" />
     <Compile Include="Entities\Transaction.cs" />
     <Compile Include="Entities\TransactionType.cs" />
+    <Compile Include="Migrations\201702121354129_noNeedForCategories.cs" />
+    <Compile Include="Migrations\201702121354129_noNeedForCategories.Designer.cs">
+      <DependentUpon>201702121354129_noNeedForCategories.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201702121354129_noNeedForCategories.resx">
+      <DependentUpon>201702121354129_noNeedForCategories.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
