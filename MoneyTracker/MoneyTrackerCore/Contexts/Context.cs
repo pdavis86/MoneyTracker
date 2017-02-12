@@ -17,7 +17,11 @@ namespace MoneyTrackerDataModel.Contexts
 
         public Context(string connStr) : base(connStr)
         {
-            Database.SetInitializer<Context>(new MigrateDatabaseToLatestVersion<Context, Migrations.Configuration>());
+            Database.SetInitializer<Context>(new MigrateDatabaseToLatestVersion<Context, Migrations.Configuration>(true));
+
+            ////Force an update
+            //var dbMigrator = new System.Data.Entity.Migrations.DbMigrator(new Migrations.Configuration());
+            //dbMigrator.Update();
         }
 
         public DbSet<Entities.Account> Accounts { get; set; }
