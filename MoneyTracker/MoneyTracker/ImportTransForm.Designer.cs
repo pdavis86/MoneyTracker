@@ -1,6 +1,6 @@
 ﻿namespace MoneyTracker
 {
-    partial class ImportForm
+    partial class ImportTransForm
     {
         /// <summary>
         /// Required designer variable.

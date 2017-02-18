@@ -23,19 +23,7 @@ namespace MoneyTracker
         {
             using (var db = new Context(_connStr))
             {
-                //return (from aa in db.AutoAllocations select aa).ToList();
-                //return db.AutoAllocations.Select(aa => aa).ToList();
                 return db.AutoAllocations.ToList();
-
-                //try
-                //{
-
-                //}
-                //catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
-                //{
-                //    var actualException = ex.InnerException;
-                //}
-
             }
         }
 
@@ -63,7 +51,15 @@ namespace MoneyTracker
             }
         }
 
-        public static bool WriteToDatabase(List<Transaction> transData)
+        public static List<Employer> GetEmployers()
+        {
+            using (var db = new Context(_connStr))
+            {
+                return db.Employers.ToList();
+            }
+        }
+
+        public static bool WriteTransactions(List<Transaction> transData)
         {
             try
             {
@@ -83,7 +79,8 @@ namespace MoneyTracker
                 {
                     foreach (var ve in eve.ValidationErrors)
                     {
-                        var face = eve.Entry.Entity.ToString() + " had error: " + ve.ErrorMessage;
+                        var temp = eve.Entry.Entity.ToString() + " had error: " + ve.ErrorMessage;
+                        System.Diagnostics.Debugger.Break();
                     }
                 }
             }
@@ -95,22 +92,60 @@ namespace MoneyTracker
             return false;
         }
 
-        //public static List<Transaction> GetTransactions(Expression<Func<Transaction,bool>> predicate)
-        //{
-        //    using (var db = new Context(_connStr))
-        //    {
-        //        return db.Transactions..Where(predicate).ToList();
-        //    }
-        //}
+        public static bool WritePaySlip(PaySlip paySlip)
+        {
+            try
+            {
+                using (var db = new Context(_connStr))
+                {
+                    db.PaySlips.Add(paySlip);
+                    db.SaveChanges();
+                }
+                return true;
+            }
+            catch (System.Data.Entity.Validation.DbEntityValidationException ex1)
+            {
+                foreach (var eve in ex1.EntityValidationErrors)
+                {
+                    foreach (var ve in eve.ValidationErrors)
+                    {
+                        var temp = eve.Entry.Entity.ToString() + " had error: " + ve.ErrorMessage;
+                        System.Diagnostics.Debugger.Break();
+                    }
+                }
+            }
+            catch (System.Data.Entity.Infrastructure.DbUpdateException ex2)
+            {
+                var actualException = ex2.InnerException.InnerException;
+                System.Diagnostics.Debugger.Break();
+            }
+            return false;
+        }
 
         public static DateTime? GetMaxTransactionDate(int accountId)
         {
             using (var db = new Context(_connStr))
             {
                 var trans = db.Transactions.Where(t => t.AccountId == accountId);
-                if (trans.Count() > 0 )
+                if (trans.Count() > 0)
                 {
                     return trans.Max(t => t.Date);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        public static DateTime? GetMaxPaySlipDate()
+        {
+            using (var db = new Context(_connStr))
+            {
+                var slips = db.PaySlips;
+                if (slips.Count() > 0)
+                {
+                    return slips.Max(s => s.Date);
                 }
                 else
                 {

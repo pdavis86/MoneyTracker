@@ -19,13 +19,6 @@ namespace MoneyTracker
             InitializeComponent();
         }
 
-        private void btnImport_Click(object sender, EventArgs e)
-        {
-            var importForm = new ImportForm();
-            importForm.AccountId = (int)cboAccounts.SelectedValue;
-            importForm.ShowDialog(this);
-        }
-
         private void MainForm_Shown(object sender, EventArgs e)
         {
             cboAccounts.DataSource = Controller.GetAccounts();
@@ -43,18 +36,30 @@ namespace MoneyTracker
 
         private void cboAccounts_SelectedValueChanged(object sender, EventArgs e)
         {
+            GetMaxDates();
+        }
+
+        private void btnImportTrans_Click(object sender, EventArgs e)
+        {
+            var form = new ImportTransForm();
+            form.AccountId = (int)cboAccounts.SelectedValue;
+            form.ShowDialog(this);
+            GetMaxDates();
+        }
+
+        private void btnImportSalary_Click(object sender, EventArgs e)
+        {
+            var form = new ImportPaySlipForm();
+            form.ShowDialog(this);
+            GetMaxDates();
+        }
+
+        private void GetMaxDates()
+        {
             if (formLoaded)
             {
-                int accountId;
-                //if (cboAccounts.SelectedValue.GetType() == typeof(MoneyTrackerDataModel.Entities.Account))
-                //{
-                //    accountId = (int)((MoneyTrackerDataModel.Entities.Account)cboAccounts.SelectedValue).AccountId;
-                //}
-                //else
-                //{
-                accountId = (int)cboAccounts.SelectedValue;
-                //}
-                lblMaxDate.Text = Controller.GetMaxTransactionDate(accountId)?.ToString(Controller.DATEFORMAT_DISPLAY);
+                lblMaxTrans.Text = Controller.GetMaxTransactionDate((int)cboAccounts.SelectedValue)?.ToString(Controller.DATEFORMAT_DISPLAY);
+                lblMaxPaySlip.Text = Controller.GetMaxPaySlipDate()?.ToString(Controller.DATEFORMAT_DISPLAY);
             }
         }
     }

@@ -6,14 +6,14 @@ using System.Windows.Forms;
 
 namespace MoneyTracker
 {
-    public partial class ImportForm : Form
+    public partial class ImportTransForm : Form
     {
         public int AccountId { get; set; }
 
         private OpenFileDialog openDialog = new OpenFileDialog();
 
         #region Constructor
-        public ImportForm()
+        public ImportTransForm()
         {
             InitializeComponent();
         }
@@ -290,7 +290,7 @@ namespace MoneyTracker
                     Balance = decimal.Parse(row.Cells["Balance"].Value.ToString())
                 });
             }
-            return Controller.WriteToDatabase(transData);
+            return Controller.WriteTransactions(transData);
         }
 
     } //End class
