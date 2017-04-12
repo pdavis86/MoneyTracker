@@ -32,6 +32,8 @@
             this.btnFindFile = new System.Windows.Forms.Button();
             this.txtImportFile = new System.Windows.Forms.TextBox();
             this.btnImport = new System.Windows.Forms.Button();
+            this.btnLoad = new System.Windows.Forms.Button();
+            this.btnInsert = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.grdDataView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -85,21 +87,46 @@
             this.btnImport.Name = "btnImport";
             this.btnImport.Size = new System.Drawing.Size(75, 23);
             this.btnImport.TabIndex = 9;
-            this.btnImport.Text = "&Import";
+            this.btnImport.Text = "&Save";
             this.btnImport.UseVisualStyleBackColor = true;
             this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
             // 
-            // ImportForm
+            // btnLoad
+            // 
+            this.btnLoad.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnLoad.Location = new System.Drawing.Point(89, 417);
+            this.btnLoad.Name = "btnLoad";
+            this.btnLoad.Size = new System.Drawing.Size(75, 23);
+            this.btnLoad.TabIndex = 11;
+            this.btnLoad.Text = "&Load";
+            this.btnLoad.UseVisualStyleBackColor = true;
+            this.btnLoad.Click += new System.EventHandler(this.cbLoad_Click);
+            // 
+            // btnInsert
+            // 
+            this.btnInsert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnInsert.Location = new System.Drawing.Point(182, 417);
+            this.btnInsert.Name = "btnInsert";
+            this.btnInsert.Size = new System.Drawing.Size(75, 23);
+            this.btnInsert.TabIndex = 12;
+            this.btnInsert.Text = "&Insert";
+            this.btnInsert.UseVisualStyleBackColor = true;
+            this.btnInsert.Click += new System.EventHandler(this.btnInsert_Click);
+            // 
+            // ImportTransForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(836, 452);
+            this.Controls.Add(this.btnInsert);
+            this.Controls.Add(this.btnLoad);
             this.Controls.Add(this.btnImport);
             this.Controls.Add(this.grdDataView);
             this.Controls.Add(this.btnFindFile);
             this.Controls.Add(this.txtImportFile);
-            this.Name = "ImportForm";
-            this.Text = "ImportForm";
+            this.Name = "ImportTransForm";
+            this.Text = "Transactions";
+            this.Shown += new System.EventHandler(this.ImportTransForm_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.grdDataView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -111,5 +138,7 @@
         internal System.Windows.Forms.Button btnFindFile;
         internal System.Windows.Forms.TextBox txtImportFile;
         private System.Windows.Forms.Button btnImport;
+        private System.Windows.Forms.Button btnLoad;
+        private System.Windows.Forms.Button btnInsert;
     }
 }

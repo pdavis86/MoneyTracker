@@ -61,47 +61,32 @@ namespace MoneyTracker
 
         public static bool WriteTransactions(List<Transaction> transData)
         {
-            try
+            using (var db = new Context(_connStr))
             {
-                using (var db = new Context(_connStr))
+                foreach (Transaction trans in transData)
                 {
-                    foreach (Transaction trans in transData)
-                    {
-                        db.Transactions.Add(trans);
-                    }
-                    db.SaveChanges();
+                    db.Transactions.Add(trans);
                 }
-                return true;
+                SaveChangesSafely(db);
             }
-            catch (System.Data.Entity.Validation.DbEntityValidationException ex1)
-            {
-                foreach (var eve in ex1.EntityValidationErrors)
-                {
-                    foreach (var ve in eve.ValidationErrors)
-                    {
-                        var temp = eve.Entry.Entity.ToString() + " had error: " + ve.ErrorMessage;
-                        System.Diagnostics.Debugger.Break();
-                    }
-                }
-            }
-            catch (System.Data.Entity.Infrastructure.DbUpdateException ex2)
-            {
-                var actualException = ex2.InnerException.InnerException;
-                System.Diagnostics.Debugger.Break();
-            }
-            return false;
+            return true;
         }
 
         public static bool WritePaySlip(PaySlip paySlip)
         {
+            using (var db = new Context(_connStr))
+            {
+                db.PaySlips.Add(paySlip);
+                SaveChangesSafely(db);
+            }
+            return true;
+        }
+
+        private static void SaveChangesSafely(Context db)
+        {
             try
             {
-                using (var db = new Context(_connStr))
-                {
-                    db.PaySlips.Add(paySlip);
-                    db.SaveChanges();
-                }
-                return true;
+                db.SaveChanges();
             }
             catch (System.Data.Entity.Validation.DbEntityValidationException ex1)
             {
@@ -119,7 +104,6 @@ namespace MoneyTracker
                 var actualException = ex2.InnerException.InnerException;
                 System.Diagnostics.Debugger.Break();
             }
-            return false;
         }
 
         public static DateTime? GetMaxTransactionDate(int accountId)
@@ -151,6 +135,29 @@ namespace MoneyTracker
                 {
                     return null;
                 }
+            }
+        }
+
+        public static List<Transaction> GetTransactionsNeedingAttention()
+        {
+            using (var db = new Context(_connStr))
+            {
+                return db.Transactions.Where(t => t.Category.Obsolete == true || t.CategoryId == null).ToList();
+            }
+        }
+
+        public static bool SetTransactionCategory(int transactionId, int? categoryId)
+        {
+            using (var db = new Context(_connStr))
+            {
+                var trans = db.Transactions.Single(t => t.TransactionId == transactionId);
+                if (trans != null && trans.CategoryId != categoryId)
+                {
+                    trans.CategoryId = categoryId;
+                    SaveChangesSafely(db);
+                    return true;
+                }
+                return false;
             }
         }
 

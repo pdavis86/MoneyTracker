@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace MoneyTracker
@@ -21,12 +22,16 @@ namespace MoneyTracker
 
         #region Event Handlers
 
+        private void ImportTransForm_Shown(object sender, EventArgs e)
+        {
+            BuildGrid();
+        }
+
         private void btnFindFile_Click(object sender, EventArgs e)
         {
             //todo: deal with exceptions
             //try
             //{
-            BuildGrid();
             LoadSourceData();
             AutoAssignValues();
             //}
@@ -53,6 +58,16 @@ namespace MoneyTracker
             //    var dosomething = ex.ToString();
             //    Debugger.Break();
             //}
+        }
+
+        private void cbLoad_Click(object sender, EventArgs e)
+        {
+            LoadTransactionsNeedingAttention();
+        }
+
+        private void btnInsert_Click(object sender, EventArgs e)
+        {
+            var rowNum = grdDataView.Rows.Add();
         }
 
         #endregion
@@ -119,7 +134,7 @@ namespace MoneyTracker
 
                     default:
                         grdDataView.Columns.Add(prop.Name, prop.Name);
-                        grdDataView.Columns[prop.Name].ReadOnly = true;  //todo: does this work?
+                        //grdDataView.Columns[prop.Name].ReadOnly = true; 
                         break;
                 }
                 if (prop.Name == "Value" || prop.Name == "Balance")
@@ -185,10 +200,10 @@ namespace MoneyTracker
                             grdDataView.Rows[rowNum].Cells["Description"].Value = lineText.Substring(13);
                             break;
                         case "Amoun":
-                            grdDataView.Rows[rowNum].Cells["Value"].Value = decimal.Parse(lineText.Substring(8).Replace(" GBP",""));
+                            grdDataView.Rows[rowNum].Cells["Value"].Value = decimal.Parse(lineText.Substring(8).Replace(" GBP", ""));
                             break;
                         case "Balan":
-                            grdDataView.Rows[rowNum].Cells["Balance"].Value = decimal.Parse(lineText.Substring(9).Replace(" GBP", "")); 
+                            grdDataView.Rows[rowNum].Cells["Balance"].Value = decimal.Parse(lineText.Substring(9).Replace(" GBP", ""));
                             break;
                     }
                 }
@@ -267,7 +282,7 @@ namespace MoneyTracker
             var lo_return = new DataGridViewComboBoxCell();
             var list = new List<TransactionCategory>();
             list.Add(new TransactionCategory());
-            list.AddRange(Controller.GetTransactionCategories());
+            list.AddRange(Controller.GetTransactionCategories().Where(c => !c.Obsolete).OrderBy(c => c.Description));
             lo_return.DataSource = list;
             lo_return.DisplayMember = "Description";
             lo_return.ValueMember = "CategoryId";
@@ -279,18 +294,41 @@ namespace MoneyTracker
             var transData = new List<Transaction>();
             foreach (DataGridViewRow row in grdDataView.Rows)
             {
-                transData.Add(new Transaction
+                int? transId = row.Cells["TransactionId"].Value != null ? int.Parse(row.Cells["TransactionId"].Value.ToString()) : (int?)null; 
+                int? categId = row.Cells["CategoryId"].Value != null ? int.Parse(row.Cells["CategoryId"].Value.ToString()) : (int?)null;
+                if (transId == null)
                 {
-                    AccountId = this.AccountId, 
-                    CategoryId = row.Cells["CategoryId"].Value != null ? int.Parse(row.Cells["CategoryId"].Value.ToString()) : (int?)null,
-                    TypeId = row.Cells["TypeId"].Value != null ? int.Parse(row.Cells["TypeId"].Value.ToString()) : (int?)null,
-                    Date = DateTime.Parse(row.Cells["Date"].Value.ToString()),
-                    Description = row.Cells["Description"].Value.ToString(),
-                    Value = decimal.Parse(row.Cells["Value"].Value.ToString()),
-                    Balance = decimal.Parse(row.Cells["Balance"].Value.ToString())
-                });
+                    transData.Add(new Transaction
+                    {
+                        AccountId = this.AccountId,
+                        CategoryId = categId,
+                        TypeId = row.Cells["TypeId"].Value != null ? int.Parse(row.Cells["TypeId"].Value.ToString()) : (int?)null,
+                        Date = DateTime.Parse(row.Cells["Date"].Value.ToString()),
+                        Description = row.Cells["Description"].Value.ToString(),
+                        Value = decimal.Parse(row.Cells["Value"].Value.ToString()),
+                        Balance = decimal.Parse(row.Cells["Balance"].Value.ToString())
+                    });
+                }
+                else
+                {
+                    Controller.SetTransactionCategory((int)transId, categId);
+                }
             }
             return Controller.WriteTransactions(transData);
+        }
+
+        private void LoadTransactionsNeedingAttention()
+        {
+            foreach (var trans in Controller.GetTransactionsNeedingAttention())
+            {
+                var rowNum = grdDataView.Rows.Add();
+                grdDataView.Rows[rowNum].Cells["TransactionId"].Value = trans.TransactionId;
+                grdDataView.Rows[rowNum].Cells["Date"].Value = trans.Date;
+                grdDataView.Rows[rowNum].Cells["Description"].Value = trans.Description;
+                grdDataView.Rows[rowNum].Cells["Value"].Value = trans.Value;
+                grdDataView.Rows[rowNum].Cells["Balance"].Value = trans.Balance;
+                grdDataView.Rows[rowNum].Cells["CategoryId"].Value = trans.CategoryId;
+            }
         }
 
     } //End class
