@@ -53,6 +53,8 @@
             this.decOvertime = new MoneyTracker.DecimalBoxControl();
             this.decSsp = new MoneyTracker.DecimalBoxControl();
             this.decBasic = new MoneyTracker.DecimalBoxControl();
+            this.label13 = new System.Windows.Forms.Label();
+            this.decBackPay = new MoneyTracker.DecimalBoxControl();
             this.SuspendLayout();
             // 
             // label1
@@ -84,7 +86,7 @@
             this.dtpDate.Location = new System.Drawing.Point(118, 39);
             this.dtpDate.Name = "dtpDate";
             this.dtpDate.Size = new System.Drawing.Size(361, 20);
-            this.dtpDate.TabIndex = 5;
+            this.dtpDate.TabIndex = 0;
             // 
             // label2
             // 
@@ -180,7 +182,7 @@
             // 
             this.label12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(265, 241);
+            this.label12.Location = new System.Drawing.Point(265, 286);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(27, 13);
             this.label12.TabIndex = 26;
@@ -190,10 +192,10 @@
             // 
             this.btnImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnImport.Enabled = false;
-            this.btnImport.Location = new System.Drawing.Point(404, 238);
+            this.btnImport.Location = new System.Drawing.Point(404, 283);
             this.btnImport.Name = "btnImport";
             this.btnImport.Size = new System.Drawing.Size(75, 23);
-            this.btnImport.TabIndex = 27;
+            this.btnImport.TabIndex = 12;
             this.btnImport.Text = "&Import";
             this.btnImport.UseVisualStyleBackColor = true;
             this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
@@ -201,10 +203,10 @@
             // decNet
             // 
             this.decNet.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.decNet.Location = new System.Drawing.Point(298, 238);
+            this.decNet.Location = new System.Drawing.Point(298, 283);
             this.decNet.Name = "decNet";
             this.decNet.Size = new System.Drawing.Size(100, 20);
-            this.decNet.TabIndex = 15;
+            this.decNet.TabIndex = 11;
             this.decNet.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.decNet.TextChanged += new System.EventHandler(this.decNet_TextChanged);
             // 
@@ -213,7 +215,7 @@
             this.decStudent.Location = new System.Drawing.Point(373, 165);
             this.decStudent.Name = "decStudent";
             this.decStudent.Size = new System.Drawing.Size(100, 20);
-            this.decStudent.TabIndex = 14;
+            this.decStudent.TabIndex = 10;
             this.decStudent.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // decPension
@@ -221,7 +223,7 @@
             this.decPension.Location = new System.Drawing.Point(373, 139);
             this.decPension.Name = "decPension";
             this.decPension.Size = new System.Drawing.Size(100, 20);
-            this.decPension.TabIndex = 13;
+            this.decPension.TabIndex = 9;
             this.decPension.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // decNi
@@ -229,7 +231,7 @@
             this.decNi.Location = new System.Drawing.Point(373, 113);
             this.decNi.Name = "decNi";
             this.decNi.Size = new System.Drawing.Size(100, 20);
-            this.decNi.TabIndex = 12;
+            this.decNi.TabIndex = 8;
             this.decNi.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // decTax
@@ -237,7 +239,7 @@
             this.decTax.Location = new System.Drawing.Point(373, 87);
             this.decTax.Name = "decTax";
             this.decTax.Size = new System.Drawing.Size(100, 20);
-            this.decTax.TabIndex = 11;
+            this.decTax.TabIndex = 7;
             this.decTax.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // decUnpaid
@@ -245,7 +247,7 @@
             this.decUnpaid.Location = new System.Drawing.Point(118, 188);
             this.decUnpaid.Name = "decUnpaid";
             this.decUnpaid.Size = new System.Drawing.Size(100, 20);
-            this.decUnpaid.TabIndex = 10;
+            this.decUnpaid.TabIndex = 5;
             this.decUnpaid.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // decBonus
@@ -253,7 +255,7 @@
             this.decBonus.Location = new System.Drawing.Point(118, 162);
             this.decBonus.Name = "decBonus";
             this.decBonus.Size = new System.Drawing.Size(100, 20);
-            this.decBonus.TabIndex = 9;
+            this.decBonus.TabIndex = 4;
             this.decBonus.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // decOvertime
@@ -261,7 +263,7 @@
             this.decOvertime.Location = new System.Drawing.Point(118, 136);
             this.decOvertime.Name = "decOvertime";
             this.decOvertime.Size = new System.Drawing.Size(100, 20);
-            this.decOvertime.TabIndex = 8;
+            this.decOvertime.TabIndex = 3;
             this.decOvertime.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // decSsp
@@ -269,7 +271,7 @@
             this.decSsp.Location = new System.Drawing.Point(118, 110);
             this.decSsp.Name = "decSsp";
             this.decSsp.Size = new System.Drawing.Size(100, 20);
-            this.decSsp.TabIndex = 7;
+            this.decSsp.TabIndex = 2;
             this.decSsp.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // decBasic
@@ -277,14 +279,33 @@
             this.decBasic.Location = new System.Drawing.Point(118, 84);
             this.decBasic.Name = "decBasic";
             this.decBasic.Size = new System.Drawing.Size(100, 20);
-            this.decBasic.TabIndex = 6;
+            this.decBasic.TabIndex = 1;
             this.decBasic.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(12, 217);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(56, 13);
+            this.label13.TabIndex = 29;
+            this.label13.Text = "Back-Pay:";
+            // 
+            // decBackPay
+            // 
+            this.decBackPay.Location = new System.Drawing.Point(118, 214);
+            this.decBackPay.Name = "decBackPay";
+            this.decBackPay.Size = new System.Drawing.Size(100, 20);
+            this.decBackPay.TabIndex = 6;
+            this.decBackPay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // ImportPaySlipForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(491, 273);
+            this.ClientSize = new System.Drawing.Size(491, 318);
+            this.Controls.Add(this.label13);
+            this.Controls.Add(this.decBackPay);
             this.Controls.Add(this.btnImport);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.label11);
@@ -345,5 +366,7 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Button btnImport;
+        private System.Windows.Forms.Label label13;
+        private DecimalBoxControl decBackPay;
     }
 }

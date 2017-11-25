@@ -28,6 +28,8 @@ namespace MoneyTrackerDataModel.Entities
 
         public decimal? UnpaidPay { get; set; }
 
+        public decimal? BackPay { get; set; }
+
         public decimal Tax { get; set; }
 
         public decimal NationalInsurance { get; set; }

@@ -46,6 +46,7 @@ namespace MoneyTracker
                 Overtime = decOvertime.Value,
                 Bonus = decBonus.Value,
                 UnpaidPay = decUnpaid.Value,
+                //todo: BackPay = decBackPay.Value,
                 Tax = decTax.ValueDecimal,
                 NationalInsurance = decNi.ValueDecimal,
                 Pension = decPension.Value,
@@ -57,17 +58,28 @@ namespace MoneyTracker
 
         private void decNet_TextChanged(object sender, EventArgs e)
         {
-            if ( dtpDate.Value.Date  != DateTime.Today.Date)
+            ValidateInput();
+        }
+
+        private void ValidateInput()
+        {
+            if (dtpDate.Value.Date == DateTime.Today.Date)
             {
-                decimal payments = decBasic.ValueDecimal + decSsp.ValueDecimal + decOvertime.ValueDecimal + decBonus.ValueDecimal + decUnpaid.ValueDecimal;
-                decimal deductions = decTax.ValueDecimal + decNi.ValueDecimal + decPension.ValueDecimal + decStudent.ValueDecimal;
-                decimal netCalcd = payments - deductions;
-                btnImport.Enabled = decNet.Value == netCalcd;
+                switch (MessageBox.Show("The date has not been changed. is it correct?", "Date Not Changed", MessageBoxButtons.YesNoCancel))
+                {
+                    case DialogResult.Yes:
+                        //continue
+                        break;
+                    default:
+                        btnImport.Enabled = false;
+                        return;
+                }
             }
-            else
-            {
-                btnImport.Enabled = false;
-            }
+
+            decimal payments = decBasic.ValueDecimal + decSsp.ValueDecimal + decOvertime.ValueDecimal + decBonus.ValueDecimal + decUnpaid.ValueDecimal + decBackPay.ValueDecimal;
+            decimal deductions = decTax.ValueDecimal + decNi.ValueDecimal + decPension.ValueDecimal + decStudent.ValueDecimal;
+            decimal netCalcd = payments - deductions;
+            btnImport.Enabled = decNet.Value == netCalcd;
         }
     }
 }
