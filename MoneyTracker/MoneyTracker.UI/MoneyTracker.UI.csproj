@@ -61,6 +61,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller.cs" />
+    <Compile Include="CustomControls\DecimalBoxControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomControls\DecimalBoxControl.Designer.cs">
+      <DependentUpon>DecimalBoxControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="ImportPaySlipForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -115,11 +121,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MoneyTrackerControls\MoneyTrackerControls.csproj">
-      <Project>{D37A8C7C-7CC2-4C66-9F7B-A3A0147AD074}</Project>
-      <Name>MoneyTrackerControls</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MoneyTrackerCore\MoneyTrackerDataModel.csproj">
+    <ProjectReference Include="..\MoneyTracker.Data\MoneyTracker.Data.csproj">
       <Project>{b56626ee-58f9-46cd-8818-7898ac50f7d1}</Project>
       <Name>MoneyTrackerDataModel</Name>
     </ProjectReference>

@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MoneyTracker
@@ -58,28 +51,40 @@ namespace MoneyTracker
 
         private void decNet_TextChanged(object sender, EventArgs e)
         {
+            //Validate on changing any of the text boxes
             ValidateInput();
         }
 
         private void ValidateInput()
+        {
+            decimal payments = decBasic.ValueDecimal + decSsp.ValueDecimal + decOvertime.ValueDecimal + decBonus.ValueDecimal + decUnpaid.ValueDecimal + decBackPay.ValueDecimal;
+            decimal deductions = decTax.ValueDecimal + decNi.ValueDecimal + decPension.ValueDecimal + decStudent.ValueDecimal;
+            decimal netCalcd = payments - deductions;
+            btnImport.Enabled = decNet.Value == netCalcd;
+        }
+
+        private void dtpDate_Leave(object sender, EventArgs e)
         {
             if (dtpDate.Value.Date == DateTime.Today.Date)
             {
                 switch (MessageBox.Show("The date has not been changed. is it correct?", "Date Not Changed", MessageBoxButtons.YesNoCancel))
                 {
                     case DialogResult.Yes:
-                        //continue
                         break;
+
+                    case DialogResult.No:
+                    case DialogResult.Cancel:
+                        btnImport.Enabled = false;
+                        dtpDate.Focus();
+                        break;
+
                     default:
                         btnImport.Enabled = false;
                         return;
                 }
             }
-
-            decimal payments = decBasic.ValueDecimal + decSsp.ValueDecimal + decOvertime.ValueDecimal + decBonus.ValueDecimal + decUnpaid.ValueDecimal + decBackPay.ValueDecimal;
-            decimal deductions = decTax.ValueDecimal + decNi.ValueDecimal + decPension.ValueDecimal + decStudent.ValueDecimal;
-            decimal netCalcd = payments - deductions;
-            btnImport.Enabled = decNet.Value == netCalcd;
         }
+
+
     }
 }

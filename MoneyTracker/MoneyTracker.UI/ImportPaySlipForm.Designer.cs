@@ -75,7 +75,7 @@
             this.cboEmployers.Location = new System.Drawing.Point(118, 12);
             this.cboEmployers.Name = "cboEmployers";
             this.cboEmployers.Size = new System.Drawing.Size(361, 21);
-            this.cboEmployers.TabIndex = 3;
+            this.cboEmployers.TabIndex = 13;
             // 
             // dtpDate
             // 
@@ -87,6 +87,7 @@
             this.dtpDate.Name = "dtpDate";
             this.dtpDate.Size = new System.Drawing.Size(361, 20);
             this.dtpDate.TabIndex = 0;
+            this.dtpDate.Leave += new System.EventHandler(this.dtpDate_Leave);
             // 
             // label2
             // 
