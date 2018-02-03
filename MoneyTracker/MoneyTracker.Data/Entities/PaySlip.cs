@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -29,6 +25,8 @@ namespace MoneyTrackerDataModel.Entities
         public decimal? UnpaidPay { get; set; }
 
         public decimal? BackPay { get; set; }
+
+        public decimal? HolidayPay { get; set; }
 
         public decimal Tax { get; set; }
 

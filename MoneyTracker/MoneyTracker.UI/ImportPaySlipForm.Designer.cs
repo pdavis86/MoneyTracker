@@ -55,6 +55,8 @@
             this.decBasic = new MoneyTracker.DecimalBoxControl();
             this.label13 = new System.Windows.Forms.Label();
             this.decBackPay = new MoneyTracker.DecimalBoxControl();
+            this.decHolidayPay = new MoneyTracker.DecimalBoxControl();
+            this.label14 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -75,7 +77,7 @@
             this.cboEmployers.Location = new System.Drawing.Point(118, 12);
             this.cboEmployers.Name = "cboEmployers";
             this.cboEmployers.Size = new System.Drawing.Size(361, 21);
-            this.cboEmployers.TabIndex = 13;
+            this.cboEmployers.TabIndex = 14;
             // 
             // dtpDate
             // 
@@ -196,7 +198,7 @@
             this.btnImport.Location = new System.Drawing.Point(404, 283);
             this.btnImport.Name = "btnImport";
             this.btnImport.Size = new System.Drawing.Size(75, 23);
-            this.btnImport.TabIndex = 12;
+            this.btnImport.TabIndex = 13;
             this.btnImport.Text = "&Import";
             this.btnImport.UseVisualStyleBackColor = true;
             this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
@@ -207,7 +209,7 @@
             this.decNet.Location = new System.Drawing.Point(298, 283);
             this.decNet.Name = "decNet";
             this.decNet.Size = new System.Drawing.Size(100, 20);
-            this.decNet.TabIndex = 11;
+            this.decNet.TabIndex = 12;
             this.decNet.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.decNet.TextChanged += new System.EventHandler(this.decNet_TextChanged);
             // 
@@ -216,7 +218,7 @@
             this.decStudent.Location = new System.Drawing.Point(373, 165);
             this.decStudent.Name = "decStudent";
             this.decStudent.Size = new System.Drawing.Size(100, 20);
-            this.decStudent.TabIndex = 10;
+            this.decStudent.TabIndex = 11;
             this.decStudent.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // decPension
@@ -224,7 +226,7 @@
             this.decPension.Location = new System.Drawing.Point(373, 139);
             this.decPension.Name = "decPension";
             this.decPension.Size = new System.Drawing.Size(100, 20);
-            this.decPension.TabIndex = 9;
+            this.decPension.TabIndex = 10;
             this.decPension.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // decNi
@@ -232,7 +234,7 @@
             this.decNi.Location = new System.Drawing.Point(373, 113);
             this.decNi.Name = "decNi";
             this.decNi.Size = new System.Drawing.Size(100, 20);
-            this.decNi.TabIndex = 8;
+            this.decNi.TabIndex = 9;
             this.decNi.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // decTax
@@ -240,7 +242,7 @@
             this.decTax.Location = new System.Drawing.Point(373, 87);
             this.decTax.Name = "decTax";
             this.decTax.Size = new System.Drawing.Size(100, 20);
-            this.decTax.TabIndex = 7;
+            this.decTax.TabIndex = 8;
             this.decTax.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // decUnpaid
@@ -300,11 +302,30 @@
             this.decBackPay.TabIndex = 6;
             this.decBackPay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
+            // decHolidayPay
+            // 
+            this.decHolidayPay.Location = new System.Drawing.Point(118, 240);
+            this.decHolidayPay.Name = "decHolidayPay";
+            this.decHolidayPay.Size = new System.Drawing.Size(100, 20);
+            this.decHolidayPay.TabIndex = 7;
+            this.decHolidayPay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(12, 243);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(66, 13);
+            this.label14.TabIndex = 31;
+            this.label14.Text = "Holiday Pay:";
+            // 
             // ImportPaySlipForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(491, 318);
+            this.Controls.Add(this.label14);
+            this.Controls.Add(this.decHolidayPay);
             this.Controls.Add(this.label13);
             this.Controls.Add(this.decBackPay);
             this.Controls.Add(this.btnImport);
@@ -369,5 +390,7 @@
         private System.Windows.Forms.Button btnImport;
         private System.Windows.Forms.Label label13;
         private DecimalBoxControl decBackPay;
+        private DecimalBoxControl decHolidayPay;
+        private System.Windows.Forms.Label label14;
     }
 }

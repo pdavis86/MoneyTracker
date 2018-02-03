@@ -39,7 +39,8 @@ namespace MoneyTracker
                 Overtime = decOvertime.Value,
                 Bonus = decBonus.Value,
                 UnpaidPay = decUnpaid.Value,
-                //todo: BackPay = decBackPay.Value,
+                BackPay = decBackPay.Value,
+                HolidayPay = decHolidayPay.Value,
                 Tax = decTax.ValueDecimal,
                 NationalInsurance = decNi.ValueDecimal,
                 Pension = decPension.Value,
@@ -57,7 +58,7 @@ namespace MoneyTracker
 
         private void ValidateInput()
         {
-            decimal payments = decBasic.ValueDecimal + decSsp.ValueDecimal + decOvertime.ValueDecimal + decBonus.ValueDecimal + decUnpaid.ValueDecimal + decBackPay.ValueDecimal;
+            decimal payments = decBasic.ValueDecimal + decSsp.ValueDecimal + decOvertime.ValueDecimal + decBonus.ValueDecimal + decUnpaid.ValueDecimal + decBackPay.ValueDecimal + decHolidayPay.ValueDecimal;
             decimal deductions = decTax.ValueDecimal + decNi.ValueDecimal + decPension.ValueDecimal + decStudent.ValueDecimal;
             decimal netCalcd = payments - deductions;
             btnImport.Enabled = decNet.Value == netCalcd;

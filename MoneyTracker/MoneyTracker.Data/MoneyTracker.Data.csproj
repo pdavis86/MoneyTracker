@@ -66,6 +66,10 @@
     <Compile Include="Migrations\201709031433550_BackPay.Designer.cs">
       <DependentUpon>201709031433550_BackPay.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201802031235441_Holiday Pay.cs" />
+    <Compile Include="Migrations\201802031235441_Holiday Pay.Designer.cs">
+      <DependentUpon>201802031235441_Holiday Pay.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -79,6 +83,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201709031433550_BackPay.resx">
       <DependentUpon>201709031433550_BackPay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802031235441_Holiday Pay.resx">
+      <DependentUpon>201802031235441_Holiday Pay.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
