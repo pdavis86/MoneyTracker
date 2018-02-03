@@ -54,7 +54,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MoneyTracker\MoneyTracker.csproj">
+    <ProjectReference Include="..\MoneyTracker.UI\MoneyTracker.UI.csproj">
       <Project>{ff349f9d-180c-4afa-9ca0-31ce9d2256a5}</Project>
       <Name>MoneyTracker</Name>
     </ProjectReference>
