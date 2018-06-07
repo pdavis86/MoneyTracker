@@ -16,6 +16,9 @@ namespace MoneyTracker
             cboEmployers.DisplayMember = "Description";
             cboEmployers.ValueMember = "EmployerId";
             cboEmployers.SelectedIndex = cboEmployers.Items.Count - 1;
+
+            dtpDate.Value = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddDays(-1);
+
             dtpDate.Focus();
         }
 
