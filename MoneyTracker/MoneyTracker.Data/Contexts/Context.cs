@@ -10,7 +10,7 @@ namespace MoneyTrackerDataModel.Contexts
     public class Context : DbContext
     {
         public Context()
-             : base(@"Data Source=.\SQLEXPRESS;Initial Catalog=testing;Integrated Security=True;MultipleActiveResultSets=True")
+             : base(@"Data Source=.\;Initial Catalog=testing;Integrated Security=True;MultipleActiveResultSets=True")
         {
             //Connect to testing when no value supplied
         }

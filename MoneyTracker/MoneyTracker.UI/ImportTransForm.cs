@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using MoneyTracker.UI.Extensions;
 
 namespace MoneyTracker
 {
@@ -63,6 +64,11 @@ namespace MoneyTracker
         private void cbLoad_Click(object sender, EventArgs e)
         {
             LoadTransactionsNeedingAttention();
+
+            if (grdDataView.Rows.Count == 0)
+            {
+                MessageBox.Show("There were none", "No rows found", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         private void btnInsert_Click(object sender, EventArgs e)
@@ -112,7 +118,7 @@ namespace MoneyTracker
                         grdDataView.Columns.Add(new DataGridViewComboBoxColumn()
                         {
                             Name = prop.Name,
-                            HeaderText = prop.Name,
+                            HeaderText = "Category",
                             CellTemplate = categs
                         });
                         break;
@@ -121,7 +127,7 @@ namespace MoneyTracker
                         grdDataView.Columns.Add(new DataGridViewComboBoxColumn()
                         {
                             Name = prop.Name,
-                            HeaderText = prop.Name,
+                            HeaderText = "Type",
                             CellTemplate = types
                         });
                         break;
@@ -133,7 +139,7 @@ namespace MoneyTracker
                         break;
 
                     default:
-                        grdDataView.Columns.Add(prop.Name, prop.Name);
+                        grdDataView.Columns.Add(prop.Name, prop.Name.TrimEnd("Id"));
                         //grdDataView.Columns[prop.Name].ReadOnly = true; 
                         break;
                 }
@@ -294,7 +300,7 @@ namespace MoneyTracker
             var transData = new List<Transaction>();
             foreach (DataGridViewRow row in grdDataView.Rows)
             {
-                int? transId = row.Cells["TransactionId"].Value != null ? int.Parse(row.Cells["TransactionId"].Value.ToString()) : (int?)null; 
+                int? transId = row.Cells["TransactionId"].Value != null ? int.Parse(row.Cells["TransactionId"].Value.ToString()) : (int?)null;
                 int? categId = row.Cells["CategoryId"].Value != null ? int.Parse(row.Cells["CategoryId"].Value.ToString()) : (int?)null;
                 if (transId == null)
                 {
@@ -311,6 +317,7 @@ namespace MoneyTracker
                 }
                 else
                 {
+                    //todo: why does this only update the category?
                     Controller.SetTransactionCategory((int)transId, categId);
                 }
             }

@@ -18,8 +18,8 @@ namespace MoneyTracker
             Application.SetCompatibleTextRenderingDefault(false);
 
             //todo: where should this come from?
-            string connStr = @"Data Source=.\SQLEXPRESS;Initial Catalog=personal;Integrated Security=True;MultipleActiveResultSets=True"; 
-            //string connStr = @"Data Source=.\SQLEXPRESS;Initial Catalog=testing;Integrated Security=True;MultipleActiveResultSets=True" 
+            string connStr = @"Data Source=.\;Initial Catalog=personal;Integrated Security=True;MultipleActiveResultSets=True"; 
+            //string connStr = @"Data Source=.\;Initial Catalog=testing;Integrated Security=True;MultipleActiveResultSets=True" 
             Controller.SetDataSource(connStr); 
 
             Application.Run(new MainForm());

@@ -67,6 +67,7 @@
     <Compile Include="CustomControls\DecimalBoxControl.Designer.cs">
       <DependentUpon>DecimalBoxControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="ImportPaySlipForm.cs">
       <SubType>Form</SubType>
     </Compile>
