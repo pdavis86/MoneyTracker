@@ -1,10 +1,11 @@
-﻿using MoneyTrackerDataModel.Entities;
+﻿using CsvHelper;
+using MoneyTracker.UI.Extensions;
+using MoneyTrackerDataModel.Entities;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using MoneyTracker.UI.Extensions;
 
 namespace MoneyTracker
 {
@@ -30,6 +31,8 @@ namespace MoneyTracker
 
         private void btnFindFile_Click(object sender, EventArgs e)
         {
+            grdDataView.Rows.Clear();
+
             //todo: deal with exceptions
             //try
             //{
@@ -73,14 +76,14 @@ namespace MoneyTracker
 
         private void btnInsert_Click(object sender, EventArgs e)
         {
-            var rowNum = grdDataView.Rows.Add();
+            grdDataView.Rows.Add();
         }
 
         #endregion
 
         private void LoadSourceData()
         {
-            openDialog.Filter = "Santander TEXT File|*.txt|CSV file|*.csv";
+            openDialog.Filter = "Santander TEXT File|*.txt|Capital One CSV file|*.csv";
             //openDialog.ValidateNames = false;
 
             if (openDialog.ShowDialog() == DialogResult.OK)
@@ -88,12 +91,21 @@ namespace MoneyTracker
                 txtImportFile.Text = openDialog.FileName;
                 //todo: why was this here? - this.Refresh();
 
-                using (StreamReader lo_reader = new StreamReader(openDialog.FileName))
+                using (var lo_reader = new StreamReader(openDialog.FileName))
                 {
-                    if (openDialog.FilterIndex == 1)
+                    switch (openDialog.FilterIndex)
                     {
-                        //todo: load on a separate thread and show progress
-                        LoadDataFromSantander(lo_reader);
+                        case 1:
+                            //todo: load on a separate thread and show progress
+                            LoadDataFromSantander(lo_reader);
+                            break;
+
+                        case 2:
+                            LoadDataFromCapitalOne(lo_reader);
+                            break;
+
+                        default:
+                            throw new Exception("Unexpected filter index");
                     }
                 }
             }
@@ -159,6 +171,8 @@ namespace MoneyTracker
 
         private void LoadDataFromSantander(StreamReader reader)
         {
+            //todo: move this logic to core
+
             //Read past the initial lines
             if (!reader.ReadLine().StartsWith("From:"))
             {
@@ -182,8 +196,8 @@ namespace MoneyTracker
             }
 
             //Read in the data
-            string charToRemove = (System.Text.Encoding.Unicode.GetString(new byte[] { 0xa0 }));
-            string lineText = null;
+            string charToRemove = System.Text.Encoding.Unicode.GetString(new byte[] { 0xa0 });
+            string lineText;
             bool newRow = true;
             var rowNum = -1;
             //object[] csvData = new object[8];
@@ -194,32 +208,67 @@ namespace MoneyTracker
                     newRow = false;
                     rowNum = grdDataView.Rows.Add();
                 }
-                lineText = reader.ReadLine()?.Replace(charToRemove, " ").Trim();
-                if (!string.IsNullOrWhiteSpace(lineText))
-                {
-                    switch (lineText.Substring(0, 5))
-                    {
-                        case "Date:":
-                            grdDataView.Rows[rowNum].Cells["Date"].Value = Convert.ToDateTime(lineText.Substring(6));
-                            break;
-                        case "Descr":
-                            grdDataView.Rows[rowNum].Cells["Description"].Value = lineText.Substring(13);
-                            break;
-                        case "Amoun":
-                            grdDataView.Rows[rowNum].Cells["Value"].Value = decimal.Parse(lineText.Substring(8).Replace(" GBP", ""));
-                            break;
-                        case "Balan":
-                            grdDataView.Rows[rowNum].Cells["Balance"].Value = decimal.Parse(lineText.Substring(9).Replace(" GBP", ""));
-                            break;
-                    }
-                }
-                if (string.IsNullOrWhiteSpace(lineText) || reader.EndOfStream)
+
+                lineText = reader.ReadLine()?.Replace(charToRemove, " ");
+
+                if (string.IsNullOrWhiteSpace(lineText))
                 {
                     newRow = true;
+                    continue;
                 }
+
+                switch (lineText.Trim().Substring(0, 5))
+                {
+                    case "Date:":
+                        grdDataView.Rows[rowNum].Cells["Date"].Value = Convert.ToDateTime(lineText.Substring(6));
+                        break;
+                    case "Descr":
+                        grdDataView.Rows[rowNum].Cells["Description"].Value = lineText.Substring(13);
+                        break;
+                    case "Amoun":
+                        grdDataView.Rows[rowNum].Cells["Value"].Value = decimal.Parse(lineText.Substring(8).Replace(" GBP", ""));
+                        break;
+                    case "Balan":
+                        grdDataView.Rows[rowNum].Cells["Balance"].Value = decimal.Parse(lineText.Substring(9).Replace(" GBP", ""));
+                        break;
+                }
+
+                //if (reader.EndOfStream)
+                //{
+                //    newRow = true;
+                //}
             } while (reader.EndOfStream == false);
 
+            //todo: remove when tested
+            MessageBox.Show("Check the first and last transactions are present following the above commetned out code");
+
             grdDataView.Rows[0].Selected = true;
+        }
+
+        private void LoadDataFromCapitalOne(StreamReader reader)
+        {
+            using (var csv = new CsvReader(reader))
+            {
+                var rowNum = -1;
+                var records = csv.GetRecords<Core.Models.CapitalOne.Transaction>();
+
+                foreach (var record in records)
+                {
+                    rowNum = grdDataView.Rows.Add();
+                    grdDataView.Rows[rowNum].Cells["Date"].Value = record.Date;
+                    grdDataView.Rows[rowNum].Cells["Description"].Value = record.Description;
+                    grdDataView.Rows[rowNum].Cells["Value"].Value = record.Amount;
+                }
+            }
+
+            if (grdDataView.Rows.Count > 0)
+            {
+                grdDataView.Rows[0].Selected = true;
+            }
+            else
+            {
+                MessageBox.Show("No data to import");
+            }
         }
 
         private void AutoAssignValues()
@@ -312,7 +361,7 @@ namespace MoneyTracker
                         Date = DateTime.Parse(row.Cells["Date"].Value.ToString()),
                         Description = row.Cells["Description"].Value.ToString(),
                         Value = decimal.Parse(row.Cells["Value"].Value.ToString()),
-                        Balance = decimal.Parse(row.Cells["Balance"].Value.ToString())
+                        Balance = row.Cells["Balance"].Value != null ? decimal.Parse(row.Cells["Balance"].Value.ToString()) : (decimal?)null
                     });
                 }
                 else

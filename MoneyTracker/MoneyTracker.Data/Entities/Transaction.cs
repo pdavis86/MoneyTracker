@@ -27,7 +27,7 @@ namespace MoneyTrackerDataModel.Entities
 
         public decimal Value { get; set; }
 
-        public decimal Balance { get; set; }
+        public decimal? Balance { get; set; }
 
 
         [ForeignKey("AccountId")]

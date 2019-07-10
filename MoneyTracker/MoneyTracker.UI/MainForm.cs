@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 
 //todo: add a way to add/edit employers
@@ -16,12 +17,11 @@ namespace MoneyTracker
 
         private void MainForm_Shown(object sender, EventArgs e)
         {
-            cboAccounts.DataSource = Controller.GetAccounts();
+            cboAccounts.DataSource = Controller.GetAccounts().Where(a => !a.Obsolete).ToList();
             cboAccounts.DisplayMember = "Description";
             cboAccounts.ValueMember = "AccountId";
 
             formLoaded = true;
-            cboAccounts.SelectedIndex = cboAccounts.Items.Count - 1;
         }
 
         private void cboAccounts_ValueMemberChanged(object sender, EventArgs e)
