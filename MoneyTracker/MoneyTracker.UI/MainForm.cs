@@ -21,6 +21,8 @@ namespace MoneyTracker
             cboAccounts.DisplayMember = "Description";
             cboAccounts.ValueMember = "AccountId";
 
+            GetMaxDates();
+
             formLoaded = true;
         }
 
@@ -31,7 +33,10 @@ namespace MoneyTracker
 
         private void cboAccounts_SelectedValueChanged(object sender, EventArgs e)
         {
-            GetMaxDates();
+            if (formLoaded)
+            {
+                GetMaxDates();
+            }
         }
 
         private void btnImportTrans_Click(object sender, EventArgs e)
@@ -51,11 +56,8 @@ namespace MoneyTracker
 
         private void GetMaxDates()
         {
-            if (formLoaded)
-            {
-                lblMaxTrans.Text = Controller.GetMaxTransactionDate((int)cboAccounts.SelectedValue)?.ToString(Controller.DATEFORMAT_DISPLAY);
-                lblMaxPaySlip.Text = Controller.GetMaxPaySlipDate()?.ToString(Controller.DATEFORMAT_DISPLAY);
-            }
+            lblMaxTrans.Text = Controller.GetMaxTransactionDate((int)cboAccounts.SelectedValue)?.ToString(Controller.DATEFORMAT_DISPLAY);
+            lblMaxPaySlip.Text = Controller.GetMaxPaySlipDate()?.ToString(Controller.DATEFORMAT_DISPLAY);
         }
     }
 }
