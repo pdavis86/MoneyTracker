@@ -1,4 +1,4 @@
-namespace MoneyTrackerDataModel.Migrations
+namespace MoneyTracker.Data.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;

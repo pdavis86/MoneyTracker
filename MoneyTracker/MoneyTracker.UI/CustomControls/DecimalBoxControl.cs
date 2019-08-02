@@ -2,14 +2,14 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 
-namespace MoneyTracker
+namespace MoneyTracker.CustomControls
 {
     public partial class DecimalBoxControl : TextBox
     {
         public DecimalBoxControl()
         {
             InitializeComponent();
-            this.TextAlign = HorizontalAlignment.Right;
+            TextAlign = HorizontalAlignment.Right;
         }
 
         protected override void OnTextChanged(EventArgs e)
@@ -44,13 +44,13 @@ namespace MoneyTracker
 
         protected override void OnValidating(CancelEventArgs e)
         {
+            const string twoDigitNumberFormat = "N2";
+
             base.OnValidating(e);
             if (!string.IsNullOrWhiteSpace(Text))
             {
-                decimal value;
-                decimal.TryParse(Text, out value);
-                const string NUMBER_FORMAT_2_DIGITS = "N2";
-                Text = value.ToString(NUMBER_FORMAT_2_DIGITS);
+                decimal.TryParse(Text, out decimal value);
+                Text = value.ToString(twoDigitNumberFormat);
             }
         }
 
@@ -66,22 +66,13 @@ namespace MoneyTracker
 
         private bool IsDecimal()
         {
-            decimal result;
-            return decimal.TryParse(Text, out result);
+            return decimal.TryParse(Text, out _);
         }
 
         private bool IsDecimalZero()
         {
             return (decimal.Parse(Text) == 0);
         }
-
-        //private void DecimalTextBox_Validating(object sender, CancelEventArgs e)
-        //{
-        //    decimal value;
-        //    decimal.TryParse(Text, out value);
-        //    const string NUMBER_FORMAT_2_DIGITS = "N2";
-        //    Text = value.ToString(NUMBER_FORMAT_2_DIGITS);
-        //}
 
         public decimal? Value
         {

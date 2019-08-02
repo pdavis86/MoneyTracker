@@ -1,39 +1,36 @@
-﻿using System;
+﻿using MoneyTracker.Core.Services;
+using System;
 using System.Linq;
 using System.Windows.Forms;
-
-//todo: add a way to add/edit employers
 
 namespace MoneyTracker
 {
     public partial class MainForm : Form
     {
-        private bool formLoaded;
+        private readonly DatabaseService _databaseService;
+        private bool _formLoaded;
 
         public MainForm()
         {
             InitializeComponent();
+
+            _databaseService = Core.Factories.DatabaseServiceFactory.GetNewDatabaseService();
         }
 
         private void MainForm_Shown(object sender, EventArgs e)
         {
-            cboAccounts.DataSource = Controller.GetAccounts().Where(a => !a.Obsolete).ToList();
+            cboAccounts.DataSource = _databaseService.GetAccounts().Where(a => !a.Obsolete).ToList();
             cboAccounts.DisplayMember = "Description";
             cboAccounts.ValueMember = "AccountId";
 
             GetMaxDates();
 
-            formLoaded = true;
-        }
-
-        private void cboAccounts_ValueMemberChanged(object sender, EventArgs e)
-        {
-            //no good
+            _formLoaded = true;
         }
 
         private void cboAccounts_SelectedValueChanged(object sender, EventArgs e)
         {
-            if (formLoaded)
+            if (_formLoaded)
             {
                 GetMaxDates();
             }
@@ -41,8 +38,10 @@ namespace MoneyTracker
 
         private void btnImportTrans_Click(object sender, EventArgs e)
         {
-            var form = new ImportTransForm();
-            form.AccountId = (int)cboAccounts.SelectedValue;
+            var form = new ImportTransForm
+            {
+                AccountId = (int)cboAccounts.SelectedValue
+            };
             form.ShowDialog(this);
             GetMaxDates();
         }
@@ -56,8 +55,9 @@ namespace MoneyTracker
 
         private void GetMaxDates()
         {
-            lblMaxTrans.Text = Controller.GetMaxTransactionDate((int)cboAccounts.SelectedValue)?.ToString(Controller.DATEFORMAT_DISPLAY);
-            lblMaxPaySlip.Text = Controller.GetMaxPaySlipDate()?.ToString(Controller.DATEFORMAT_DISPLAY);
+            const string dateFormatForDisplay = "dd/MM/yyyy";
+            lblMaxTrans.Text = _databaseService.GetMaxTransactionDate((int)cboAccounts.SelectedValue)?.ToString(dateFormatForDisplay);
+            lblMaxPaySlip.Text = _databaseService.GetMaxPaySlipDate()?.ToString(dateFormatForDisplay);
         }
     }
 }

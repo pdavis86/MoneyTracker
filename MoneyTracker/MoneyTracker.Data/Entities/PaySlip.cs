@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MoneyTrackerDataModel.Entities
+namespace MoneyTracker.Data.Entities
 {
     public class PaySlip
     {

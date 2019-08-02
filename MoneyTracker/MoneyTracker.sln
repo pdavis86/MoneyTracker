@@ -1,13 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29123.88
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoneyTracker.Core", "MoneyTracker.Core\MoneyTracker.Core.csproj", "{E2415A5A-D6AF-4913-B1A8-EB5C0D341F52}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoneyTracker.Data", "MoneyTracker.Data\MoneyTracker.Data.csproj", "{B56626EE-58F9-46CD-8818-7898AC50F7D1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoneyTracker.Tests", "MoneyTracker.Tests\MoneyTracker.Tests.csproj", "{8115DB89-EC80-46C0-9119-A26CEE05485B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoneyTracker.UI", "MoneyTracker.UI\MoneyTracker.UI.csproj", "{FF349F9D-180C-4AFA-9CA0-31CE9D2256A5}"
 EndProject
@@ -25,10 +23,6 @@ Global
 		{B56626EE-58F9-46CD-8818-7898AC50F7D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B56626EE-58F9-46CD-8818-7898AC50F7D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B56626EE-58F9-46CD-8818-7898AC50F7D1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8115DB89-EC80-46C0-9119-A26CEE05485B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8115DB89-EC80-46C0-9119-A26CEE05485B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8115DB89-EC80-46C0-9119-A26CEE05485B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8115DB89-EC80-46C0-9119-A26CEE05485B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FF349F9D-180C-4AFA-9CA0-31CE9D2256A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FF349F9D-180C-4AFA-9CA0-31CE9D2256A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF349F9D-180C-4AFA-9CA0-31CE9D2256A5}.Release|Any CPU.ActiveCfg = Release|Any CPU

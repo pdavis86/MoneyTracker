@@ -1,18 +1,15 @@
-namespace MoneyTrackerDataModel.Migrations
+namespace MoneyTracker.Data.Migrations
 {
-    using System;
-    using System.Data.Entity;
     using System.Data.Entity.Migrations;
-    using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<MoneyTrackerDataModel.Contexts.Context>
+    internal sealed class Configuration : DbMigrationsConfiguration<Contexts.Context>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
         }
 
-        protected override void Seed(MoneyTrackerDataModel.Contexts.Context context)
+        protected override void Seed(Contexts.Context context)
         {
             //  This method will be called after migrating to the latest version.
 

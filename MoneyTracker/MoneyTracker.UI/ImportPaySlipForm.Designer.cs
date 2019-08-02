@@ -1,4 +1,6 @@
-﻿namespace MoneyTracker
+﻿using MoneyTracker.CustomControls;
+
+namespace MoneyTracker
 {
     partial class ImportPaySlipForm
     {
@@ -43,19 +45,19 @@
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.btnImport = new System.Windows.Forms.Button();
-            this.decNet = new MoneyTracker.DecimalBoxControl();
-            this.decStudent = new MoneyTracker.DecimalBoxControl();
-            this.decPension = new MoneyTracker.DecimalBoxControl();
-            this.decNi = new MoneyTracker.DecimalBoxControl();
-            this.decTax = new MoneyTracker.DecimalBoxControl();
-            this.decUnpaid = new MoneyTracker.DecimalBoxControl();
-            this.decBonus = new MoneyTracker.DecimalBoxControl();
-            this.decOvertime = new MoneyTracker.DecimalBoxControl();
-            this.decSsp = new MoneyTracker.DecimalBoxControl();
-            this.decBasic = new MoneyTracker.DecimalBoxControl();
+            this.decNet = new DecimalBoxControl();
+            this.decStudent = new DecimalBoxControl();
+            this.decPension = new DecimalBoxControl();
+            this.decNi = new DecimalBoxControl();
+            this.decTax = new DecimalBoxControl();
+            this.decUnpaid = new DecimalBoxControl();
+            this.decBonus = new DecimalBoxControl();
+            this.decOvertime = new DecimalBoxControl();
+            this.decSsp = new DecimalBoxControl();
+            this.decBasic = new DecimalBoxControl();
             this.label13 = new System.Windows.Forms.Label();
-            this.decBackPay = new MoneyTracker.DecimalBoxControl();
-            this.decHolidayPay = new MoneyTracker.DecimalBoxControl();
+            this.decBackPay = new DecimalBoxControl();
+            this.decHolidayPay = new DecimalBoxControl();
             this.label14 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 

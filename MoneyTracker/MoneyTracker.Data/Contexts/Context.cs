@@ -1,23 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 
-namespace MoneyTrackerDataModel.Contexts
+namespace MoneyTracker.Data.Contexts
 {
     public class Context : DbContext
     {
-        public Context()
-             : base(@"Data Source=.\;Initial Catalog=testing;Integrated Security=True;MultipleActiveResultSets=True")
-        {
-            //Connect to testing when no value supplied
-        }
-
         public Context(string connStr) : base(connStr)
         {
-            Database.SetInitializer<Context>(new MigrateDatabaseToLatestVersion<Context, Migrations.Configuration>(true));
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<Context, Migrations.Configuration>(true));
 
             ////Force an update
             //var dbMigrator = new System.Data.Entity.Migrations.DbMigrator(new Migrations.Configuration());

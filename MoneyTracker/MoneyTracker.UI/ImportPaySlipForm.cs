@@ -1,18 +1,23 @@
-﻿using System;
+﻿using MoneyTracker.Core.Services;
+using System;
 using System.Windows.Forms;
 
 namespace MoneyTracker
 {
     public partial class ImportPaySlipForm : Form
     {
+        private readonly DatabaseService _databaseService;
+
         public ImportPaySlipForm()
         {
             InitializeComponent();
+
+            _databaseService = Core.Factories.DatabaseServiceFactory.GetNewDatabaseService();
         }
 
         private void ImportPaySlipForm_Shown(object sender, EventArgs e)
         {
-            cboEmployers.DataSource = Controller.GetEmployers();
+            cboEmployers.DataSource = _databaseService.GetEmployers();
             cboEmployers.DisplayMember = "Description";
             cboEmployers.ValueMember = "EmployerId";
             cboEmployers.SelectedIndex = cboEmployers.Items.Count - 1;
@@ -27,13 +32,13 @@ namespace MoneyTracker
             if (WriteToDatabase())
             {
                 MessageBox.Show("Data Imported", "Import Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.Close();
+                Close();
             }
         }
 
         private bool WriteToDatabase()
         {
-            var paySlip = new MoneyTrackerDataModel.Entities.PaySlip
+            var paySlip = new Data.Entities.PaySlip
             {
                 EmployerId = (int)cboEmployers.SelectedValue,
                 Date = dtpDate.Value,
@@ -50,7 +55,7 @@ namespace MoneyTracker
                 StudentLoan = decStudent.Value,
                 Net = decNet.ValueDecimal
             };
-            return Controller.WritePaySlip(paySlip);
+            return _databaseService.WritePaySlip(paySlip);
         }
 
         private void decNet_TextChanged(object sender, EventArgs e)

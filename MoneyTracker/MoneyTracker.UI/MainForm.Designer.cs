@@ -60,7 +60,6 @@
             this.cboAccounts.Name = "cboAccounts";
             this.cboAccounts.Size = new System.Drawing.Size(281, 21);
             this.cboAccounts.TabIndex = 1;
-            this.cboAccounts.ValueMemberChanged += new System.EventHandler(this.cboAccounts_ValueMemberChanged);
             this.cboAccounts.SelectedValueChanged += new System.EventHandler(this.cboAccounts_SelectedValueChanged);
             // 
             // label1

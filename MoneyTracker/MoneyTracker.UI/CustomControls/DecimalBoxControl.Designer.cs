@@ -1,4 +1,4 @@
-﻿namespace MoneyTracker
+﻿namespace MoneyTracker.CustomControls
 {
     partial class DecimalBoxControl
     {

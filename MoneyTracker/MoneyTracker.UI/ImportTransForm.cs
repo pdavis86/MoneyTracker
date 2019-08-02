@@ -1,26 +1,30 @@
-﻿using CsvHelper;
-using MoneyTracker.UI.Extensions;
-using MoneyTrackerDataModel.Entities;
+﻿using MoneyTracker.Core.Extensions;
+using MoneyTracker.Core.Services;
+using MoneyTracker.Data.Entities;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MoneyTracker
 {
     public partial class ImportTransForm : Form
     {
-        public int AccountId { get; set; }
+        private readonly OpenFileDialog _openDialog;
+        private readonly DatabaseService _databaseService;
 
-        private OpenFileDialog openDialog = new OpenFileDialog();
+        public int AccountId { private get; set; }
 
-        #region Constructor
         public ImportTransForm()
         {
             InitializeComponent();
+
+            _databaseService = Core.Factories.DatabaseServiceFactory.GetNewDatabaseService();
+            _openDialog = new OpenFileDialog();
         }
-        #endregion
 
         #region Event Handlers
 
@@ -34,34 +38,36 @@ namespace MoneyTracker
             grdDataView.Rows.Clear();
 
             //todo: deal with exceptions
-            //try
-            //{
-            LoadSourceData();
-            AutoAssignValues();
-            //}
-            //catch (Exception ex)
-            //{
-            //    var dosomething = ex.ToString();
-            //    Debugger.Break();
-            //}
+            try
+            {
+                LoadSourceData();
+                AutoAssignValues();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Sorry, something went wrong", "Something went wrong", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Debug.WriteLine(ex);
+                Debugger.Break();
+            }
         }
 
         private void btnImport_Click(object sender, EventArgs e)
         {
             //todo: deal with exceptions
-            //try
-            //{
-            if (WriteToDatabase())
+            try
             {
-                MessageBox.Show("Data Imported", "Import Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.Close();
+                if (WriteToDatabase())
+                {
+                    MessageBox.Show("Data Imported", "Import Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    Close();
+                }
             }
-            //}
-            //catch (Exception ex)
-            //{
-            //    var dosomething = ex.ToString();
-            //    Debugger.Break();
-            //}
+            catch (Exception ex)
+            {
+                MessageBox.Show("Sorry, something went wrong", "Something went wrong", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Debug.WriteLine(ex);
+                Debugger.Break();
+            }
         }
 
         private void cbLoad_Click(object sender, EventArgs e)
@@ -83,31 +89,65 @@ namespace MoneyTracker
 
         private void LoadSourceData()
         {
-            openDialog.Filter = "Santander TEXT File|*.txt|Capital One CSV file|*.csv";
-            //openDialog.ValidateNames = false;
+            _openDialog.Filter = "Santander TEXT File|*.txt|Capital One CSV file|*.csv";
 
-            if (openDialog.ShowDialog() == DialogResult.OK)
+            if (_openDialog.ShowDialog() != DialogResult.OK)
             {
-                txtImportFile.Text = openDialog.FileName;
-                //todo: why was this here? - this.Refresh();
+                return;
+            }
 
-                using (var lo_reader = new StreamReader(openDialog.FileName))
+            txtImportFile.Text = _openDialog.FileName;
+
+            using (var streamReader = new StreamReader(_openDialog.FileName))
+            {
+                switch (_openDialog.FilterIndex)
                 {
-                    switch (openDialog.FilterIndex)
-                    {
-                        case 1:
-                            //todo: load on a separate thread and show progress
-                            LoadDataFromSantander(lo_reader);
-                            break;
+                    case 1:
+                        LoadDataFromSantander(streamReader);
+                        break;
 
-                        case 2:
-                            LoadDataFromCapitalOne(lo_reader);
-                            break;
+                    case 2:
+                        LoadDataFromCapitalOne(streamReader);
+                        break;
 
-                        default:
-                            throw new Exception("Unexpected filter index");
-                    }
+                    default:
+                        throw new Exception("Unexpected filter index");
                 }
+            }
+
+            if (grdDataView.Rows.Count == 0)
+            {
+                MessageBox.Show("No data to import", "No data", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            grdDataView.Rows[0].Selected = true;
+        }
+
+        private void LoadDataFromSantander(StreamReader streamReader)
+        {
+            List<Transaction> transactions = null;
+            Task.Run(() => transactions = Core.Helpers.ParseHelper.LoadDataFromSantander(streamReader)).Wait();
+            foreach (var record in transactions)
+            {
+                var rowNum = grdDataView.Rows.Add();
+                grdDataView.Rows[rowNum].Cells["Date"].Value = record.Date;
+                grdDataView.Rows[rowNum].Cells["Description"].Value = record.Description;
+                grdDataView.Rows[rowNum].Cells["Value"].Value = record.Value;
+                grdDataView.Rows[rowNum].Cells["Balance"].Value = record.Balance;
+            }
+        }
+
+        private void LoadDataFromCapitalOne(StreamReader streamReader)
+        {
+            IEnumerable<Core.Models.CapitalOne.Transaction> transactions = null;
+            Task.Run(() => transactions = Core.Helpers.ParseHelper.LoadDataFromCapitalOne(streamReader)).Wait();
+            foreach (var record in transactions)
+            {
+                var rowNum = grdDataView.Rows.Add();
+                grdDataView.Rows[rowNum].Cells["Date"].Value = record.Date;
+                grdDataView.Rows[rowNum].Cells["Description"].Value = record.Description;
+                grdDataView.Rows[rowNum].Cells["Value"].Value = record.Amount;
             }
         }
 
@@ -118,9 +158,12 @@ namespace MoneyTracker
             grdDataView.Rows.Clear();
             grdDataView.Columns.Clear();
 
-            //todo: offload these to another thread
-            var categs = GetTransCategCombo();
-            var types = GetTransTypeCombo();
+            DataGridViewComboBoxCell categs = null;
+            DataGridViewComboBoxCell types = null;
+            Task.WaitAll(
+                Task.Run(() => categs = GetTransCategCombo()),
+                Task.Run(() => types = GetTransTypeCombo())
+                );
 
             foreach (var prop in typeof(Transaction).GetProperties())
             {
@@ -155,142 +198,53 @@ namespace MoneyTracker
                         //grdDataView.Columns[prop.Name].ReadOnly = true; 
                         break;
                 }
-                if (prop.Name == "Value" || prop.Name == "Balance")
+                if (grdDataView.Columns[prop.Name] != null)
                 {
-                    grdDataView.Columns[prop.Name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    if (prop.Name == "Value" || prop.Name == "Balance")
+                    {
+                        grdDataView.Columns[prop.Name].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    }
+                    if (prop.Name == "TransactionId" || prop.Name == "AccountId")
+                    {
+                        grdDataView.Columns[prop.Name].Visible = false;
+                    }
                 }
                 //todo: why doesn't this work? - grdDataView.Columns[prop.Name].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
             }
 
-            grdDataView.Columns["TransactionId"].Visible = false;
-            grdDataView.Columns["AccountId"].Visible = false;
+            //grdDataView.Columns["TransactionId"].Visible = false;
+            //grdDataView.Columns["AccountId"].Visible = false;
 
-            grdDataView.Columns["TypeId"].DisplayIndex = 7;
-            grdDataView.Columns["CategoryId"].DisplayIndex = 7;
-        }
-
-        private void LoadDataFromSantander(StreamReader reader)
-        {
-            //todo: move this logic to core
-
-            //Read past the initial lines
-            if (!reader.ReadLine().StartsWith("From:"))
+            if (grdDataView.Columns["TypeId"] != null)
             {
-                MessageBox.Show("Failed to read past header line 1", "Invalid File Format", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                grdDataView.Columns["TypeId"].DisplayIndex = 7;
             }
-            if (!string.IsNullOrWhiteSpace(reader.ReadLine()))
+            if (grdDataView.Columns["CategoryId"] != null)
             {
-                MessageBox.Show("Failed to read past header line 2", "Invalid File Format", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            if (!reader.ReadLine().StartsWith("Account:"))
-            {
-                MessageBox.Show("Failed to read past header line 3", "Invalid File Format", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            if (!string.IsNullOrWhiteSpace(reader.ReadLine()))
-            {
-                MessageBox.Show("Failed to read past header line 4", "Invalid File Format", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            //Read in the data
-            string charToRemove = System.Text.Encoding.Unicode.GetString(new byte[] { 0xa0 });
-            string lineText;
-            bool newRow = true;
-            var rowNum = -1;
-            //object[] csvData = new object[8];
-            do
-            {
-                if (newRow)
-                {
-                    newRow = false;
-                    rowNum = grdDataView.Rows.Add();
-                }
-
-                lineText = reader.ReadLine()?.Replace(charToRemove, " ");
-
-                if (string.IsNullOrWhiteSpace(lineText))
-                {
-                    newRow = true;
-                    continue;
-                }
-
-                switch (lineText.Trim().Substring(0, 5))
-                {
-                    case "Date:":
-                        grdDataView.Rows[rowNum].Cells["Date"].Value = Convert.ToDateTime(lineText.Substring(6));
-                        break;
-                    case "Descr":
-                        grdDataView.Rows[rowNum].Cells["Description"].Value = lineText.Substring(13);
-                        break;
-                    case "Amoun":
-                        grdDataView.Rows[rowNum].Cells["Value"].Value = decimal.Parse(lineText.Substring(8).Replace(" GBP", ""));
-                        break;
-                    case "Balan":
-                        grdDataView.Rows[rowNum].Cells["Balance"].Value = decimal.Parse(lineText.Substring(9).Replace(" GBP", ""));
-                        break;
-                }
-
-                //if (reader.EndOfStream)
-                //{
-                //    newRow = true;
-                //}
-            } while (reader.EndOfStream == false);
-
-            //todo: remove when tested
-            MessageBox.Show("Check the first and last transactions are present following the above commetned out code");
-
-            grdDataView.Rows[0].Selected = true;
-        }
-
-        private void LoadDataFromCapitalOne(StreamReader reader)
-        {
-            using (var csv = new CsvReader(reader))
-            {
-                var rowNum = -1;
-                var records = csv.GetRecords<Core.Models.CapitalOne.Transaction>();
-
-                foreach (var record in records)
-                {
-                    rowNum = grdDataView.Rows.Add();
-                    grdDataView.Rows[rowNum].Cells["Date"].Value = record.Date;
-                    grdDataView.Rows[rowNum].Cells["Description"].Value = record.Description;
-                    grdDataView.Rows[rowNum].Cells["Value"].Value = record.Amount;
-                }
-            }
-
-            if (grdDataView.Rows.Count > 0)
-            {
-                grdDataView.Rows[0].Selected = true;
-            }
-            else
-            {
-                MessageBox.Show("No data to import");
+                grdDataView.Columns["CategoryId"].DisplayIndex = 7;
             }
         }
 
         private void AutoAssignValues()
         {
-            foreach (var autoAlloc in Controller.GetAutoAllocations())
+            foreach (var autoAlloc in _databaseService.GetAutoAllocations())
             {
-                for (int li_row = 0; li_row <= grdDataView.Rows.Count - 1; li_row++)
+                for (int row = 0; row <= grdDataView.Rows.Count - 1; row++)
                 {
-                    var lo_cellValue = grdDataView.Rows[li_row].Cells[autoAlloc.GridColumnName].Value;
-                    if (lo_cellValue != null && PatternMatch(lo_cellValue.ToString(), autoAlloc.GridDataPattern))
+                    var cellValue = grdDataView.Rows[row].Cells[autoAlloc.GridColumnName].Value;
+                    if (cellValue != null && PatternMatch(cellValue.ToString(), autoAlloc.GridDataPattern))
                     {
                         if (autoAlloc.UpdateColumnName == "CategoryId")
                         {
-                            grdDataView.Rows[li_row].Cells["CategoryId"].Value = int.Parse(autoAlloc.UpdateDataValue);
+                            grdDataView.Rows[row].Cells["CategoryId"].Value = int.Parse(autoAlloc.UpdateDataValue);
                         }
                         else if (autoAlloc.UpdateColumnName == "TypeId")
                         {
-                            grdDataView.Rows[li_row].Cells["TypeId"].Value = int.Parse(autoAlloc.UpdateDataValue);
+                            grdDataView.Rows[row].Cells["TypeId"].Value = int.Parse(autoAlloc.UpdateDataValue);
                         }
                         else
                         {
-                            grdDataView.Rows[li_row].Cells[autoAlloc.UpdateColumnName].Value = autoAlloc.UpdateDataValue;
+                            grdDataView.Rows[row].Cells[autoAlloc.UpdateColumnName].Value = autoAlloc.UpdateDataValue;
                         }
                     }
                 }
@@ -322,26 +276,32 @@ namespace MoneyTracker
 
         private DataGridViewComboBoxCell GetTransTypeCombo()
         {
-            var lo_return = new DataGridViewComboBoxCell();
-            var list = new List<TransactionType>();
-            list.Add(new TransactionType());
-            list.AddRange(Controller.GetTransactionTypes());
-            lo_return.DataSource = list;
-            lo_return.DisplayMember = "Description";
-            lo_return.ValueMember = "TypeId";
-            return lo_return;
+            var list = new List<TransactionType>
+            {
+                new TransactionType()
+            };
+            list.AddRange(_databaseService.GetTransactionTypes());
+            return new DataGridViewComboBoxCell
+            {
+                DataSource = list,
+                DisplayMember = "Description",
+                ValueMember = "TypeId"
+            };
         }
 
         private DataGridViewComboBoxCell GetTransCategCombo()
         {
-            var lo_return = new DataGridViewComboBoxCell();
-            var list = new List<TransactionCategory>();
-            list.Add(new TransactionCategory());
-            list.AddRange(Controller.GetTransactionCategories().Where(c => !c.Obsolete).OrderBy(c => c.Description));
-            lo_return.DataSource = list;
-            lo_return.DisplayMember = "Description";
-            lo_return.ValueMember = "CategoryId";
-            return lo_return;
+            var list = new List<TransactionCategory>
+            {
+                new TransactionCategory()
+            };
+            list.AddRange(_databaseService.GetTransactionCategories().Where(c => !c.Obsolete).OrderBy(c => c.Description));
+            return new DataGridViewComboBoxCell
+            {
+                DataSource = list,
+                DisplayMember = "Description",
+                ValueMember = "CategoryId"
+            };
         }
 
         private bool WriteToDatabase()
@@ -355,7 +315,7 @@ namespace MoneyTracker
                 {
                     transData.Add(new Transaction
                     {
-                        AccountId = this.AccountId,
+                        AccountId = AccountId,
                         CategoryId = categId,
                         TypeId = row.Cells["TypeId"].Value != null ? int.Parse(row.Cells["TypeId"].Value.ToString()) : (int?)null,
                         Date = DateTime.Parse(row.Cells["Date"].Value.ToString()),
@@ -366,16 +326,18 @@ namespace MoneyTracker
                 }
                 else
                 {
-                    //todo: why does this only update the category?
-                    Controller.SetTransactionCategory((int)transId, categId);
+                    if (!_databaseService.SetTransactionCategory((int)transId, categId))
+                    {
+                        MessageBox.Show("Failed to set transaction category", "Something went wrong", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
-            return Controller.WriteTransactions(transData);
+            return _databaseService.WriteTransactions(transData);
         }
 
         private void LoadTransactionsNeedingAttention()
         {
-            foreach (var trans in Controller.GetTransactionsNeedingAttention())
+            foreach (var trans in _databaseService.GetTransactionsNeedingAttention())
             {
                 var rowNum = grdDataView.Rows.Add();
                 grdDataView.Rows[rowNum].Cells["TransactionId"].Value = trans.TransactionId;
@@ -387,5 +349,5 @@ namespace MoneyTracker
             }
         }
 
-    } //End class
-} //End namespace
+    }
+}

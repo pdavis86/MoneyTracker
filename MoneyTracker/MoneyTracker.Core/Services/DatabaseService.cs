@@ -1,25 +1,21 @@
-﻿using MoneyTrackerDataModel.Contexts;
-using MoneyTrackerDataModel.Entities;
+﻿using MoneyTracker.Data.Contexts;
+using MoneyTracker.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 
-namespace MoneyTracker
+namespace MoneyTracker.Core.Services
 {
-    static class Controller
+    public class DatabaseService
     {
+        private readonly string _connStr;
 
-        public const string DATEFORMAT_DISPLAY = "dd/MM/yyyy";
-
-        private static string _connStr;
-
-        public static void SetDataSource(string nameOrConnStr)
+        public DatabaseService(string nameOrConnStr)
         {
             _connStr = nameOrConnStr;
         }
 
-        public static List<AutoAllocation> GetAutoAllocations()
+        public List<AutoAllocation> GetAutoAllocations()
         {
             using (var db = new Context(_connStr))
             {
@@ -27,7 +23,7 @@ namespace MoneyTracker
             }
         }
 
-        public static List<TransactionType> GetTransactionTypes()
+        public List<TransactionType> GetTransactionTypes()
         {
             using (var db = new Context(_connStr))
             {
@@ -35,7 +31,7 @@ namespace MoneyTracker
             }
         }
 
-        public static List<TransactionCategory> GetTransactionCategories()
+        public List<TransactionCategory> GetTransactionCategories()
         {
             using (var db = new Context(_connStr))
             {
@@ -43,7 +39,7 @@ namespace MoneyTracker
             }
         }
 
-        public static List<Account> GetAccounts()
+        public List<Account> GetAccounts()
         {
             using (var db = new Context(_connStr))
             {
@@ -51,7 +47,7 @@ namespace MoneyTracker
             }
         }
 
-        public static List<Employer> GetEmployers()
+        public List<Employer> GetEmployers()
         {
             using (var db = new Context(_connStr))
             {
@@ -59,7 +55,7 @@ namespace MoneyTracker
             }
         }
 
-        public static bool WriteTransactions(List<Transaction> transData)
+        public bool WriteTransactions(List<Transaction> transData)
         {
             using (var db = new Context(_connStr))
             {
@@ -72,7 +68,7 @@ namespace MoneyTracker
             return true;
         }
 
-        public static bool WritePaySlip(PaySlip paySlip)
+        public bool WritePaySlip(PaySlip paySlip)
         {
             using (var db = new Context(_connStr))
             {
@@ -82,7 +78,7 @@ namespace MoneyTracker
             return true;
         }
 
-        private static void SaveChangesSafely(Context db)
+        private void SaveChangesSafely(Context db)
         {
             try
             {
@@ -94,24 +90,26 @@ namespace MoneyTracker
                 {
                     foreach (var ve in eve.ValidationErrors)
                     {
-                        var temp = eve.Entry.Entity.ToString() + " had error: " + ve.ErrorMessage;
+                        var validationError = eve.Entry.Entity + " had error: " + ve.ErrorMessage;
+                        System.Diagnostics.Debug.WriteLine(validationError);
                         System.Diagnostics.Debugger.Break();
                     }
                 }
             }
             catch (System.Data.Entity.Infrastructure.DbUpdateException ex2)
             {
-                var actualException = ex2.InnerException.InnerException;
+                var actualException = ex2.InnerException?.InnerException;
+                System.Diagnostics.Debug.WriteLine(actualException);
                 System.Diagnostics.Debugger.Break();
             }
         }
 
-        public static DateTime? GetMaxTransactionDate(int accountId)
+        public DateTime? GetMaxTransactionDate(int accountId)
         {
             using (var db = new Context(_connStr))
             {
                 var trans = db.Transactions.Where(t => t.AccountId == accountId);
-                if (trans.Count() > 0)
+                if (trans.Any())
                 {
                     return trans.Max(t => t.Date);
                 }
@@ -122,12 +120,12 @@ namespace MoneyTracker
             }
         }
 
-        public static DateTime? GetMaxPaySlipDate()
+        public DateTime? GetMaxPaySlipDate()
         {
             using (var db = new Context(_connStr))
             {
                 var slips = db.PaySlips;
-                if (slips.Count() > 0)
+                if (slips.Any())
                 {
                     return slips.Max(s => s.Date);
                 }
@@ -138,15 +136,15 @@ namespace MoneyTracker
             }
         }
 
-        public static List<Transaction> GetTransactionsNeedingAttention()
+        public List<Transaction> GetTransactionsNeedingAttention()
         {
             using (var db = new Context(_connStr))
             {
-                return db.Transactions.Where(t => t.Category.Obsolete == true || t.CategoryId == null).ToList();
+                return db.Transactions.Where(t => t.Category.Obsolete || t.CategoryId == null).ToList();
             }
         }
 
-        public static bool SetTransactionCategory(int transactionId, int? categoryId)
+        public bool SetTransactionCategory(int transactionId, int? categoryId)
         {
             using (var db = new Context(_connStr))
             {
