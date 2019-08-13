@@ -7,6 +7,7 @@ namespace MoneyTracker.Data.Entities
         [Key]
         public int CategoryId { get; set; }
 
+        //todo: rename any descriptions to "name"
         [Required]
         [MaxLength(50)]
         public string Description { get; set; }

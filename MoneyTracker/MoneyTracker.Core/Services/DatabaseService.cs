@@ -159,5 +159,17 @@ namespace MoneyTracker.Core.Services
             }
         }
 
+        public List<Transaction> GetTransactionsBetween(DateTime from, DateTime to)
+        {
+            using (var db = new Context(_connStr))
+            {
+                return db.Transactions.Where(t => 
+                    !t.Category.Obsolete 
+                    && t.Date >= from
+                    && t.Date <= to
+                ).ToList();
+            }
+        }
+
     }
 }

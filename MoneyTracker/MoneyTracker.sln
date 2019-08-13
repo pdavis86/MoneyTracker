@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoneyTracker.Data", "MoneyT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoneyTracker.UI", "MoneyTracker.UI\MoneyTracker.UI.csproj", "{FF349F9D-180C-4AFA-9CA0-31CE9D2256A5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoneyTracker.Web", "MoneyTracker.Web\MoneyTracker.Web.csproj", "{A90A8EDA-1722-4987-89B0-85ECFD834E15}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{FF349F9D-180C-4AFA-9CA0-31CE9D2256A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF349F9D-180C-4AFA-9CA0-31CE9D2256A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF349F9D-180C-4AFA-9CA0-31CE9D2256A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A90A8EDA-1722-4987-89B0-85ECFD834E15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A90A8EDA-1722-4987-89B0-85ECFD834E15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A90A8EDA-1722-4987-89B0-85ECFD834E15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A90A8EDA-1722-4987-89B0-85ECFD834E15}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

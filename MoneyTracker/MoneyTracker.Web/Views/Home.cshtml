@@ -1,0 +1,120 @@
+﻿@{
+    //Layout = "_Layout.cshtml";
+}
+
+@*height:400px;*@
+<div id="container" style="width:80%;height:80%;"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/7.1.2/highcharts.js" integrity="sha256-5xGp95dHFVMDnLos9kEj3d0Jt1JpyCQgnqZyuSi0IuM=" crossorigin="anonymous"></script>
+
+<script>
+    var pd = pd || {};
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        var request = new XMLHttpRequest();
+
+        request.open('GET', '@Url.Action(nameof(MoneyTracker.Web.Controllers.HomeController.GetData), new { @cachebust = DateTime.UtcNow.ToString("u") })', true);
+
+        request.onload = function () {
+            if (this.status >= 200 && this.status < 400) {
+                var chartData = JSON.parse(this.response);
+
+                pd.Chart = Highcharts.chart('container', {
+                    chart: {
+                        type: chartData.Type
+                    },
+                    title: {
+                        text: chartData.Title
+                    },
+                    xAxis: {
+                        categories: chartData.XAxisCategories
+                    },
+                    yAxis: {
+                        title: {
+                            text: chartData.YAxisTitle
+                        }
+                    },
+                    series: []
+                });
+
+                Array.prototype.forEach.call(chartData.Series, function (e) {
+                    pd.Chart.addSeries({
+                        name: e.Title,
+                        data: e.Data
+                    });
+                });
+
+            } else {
+                //todo: We reached our target server, but it returned an error
+                console.log('We reached our target server, but it returned an error');
+            }
+        };
+
+        request.onerror = function (a, b, c, d, e, f) {
+            //todo: There was a connection error of some sort
+            console.log('There was a connection error of some sort');
+        };
+
+        request.send();
+
+        //$('#container').highcharts().redraw();
+
+    });
+
+</script>
+
+
+
+@*<script>
+    var pd = pd || {};
+
+    document.addEventListener('DOMContentLoaded', function () {
+        pd.Chart = Highcharts.chart('container', {
+            chart: {
+                type: 'line'
+            },
+            title: {
+                text: 'Fruit Consumption'
+            },
+            xAxis: {
+                categories: ['Apples', 'Bananas', 'Oranges']
+            },
+            yAxis: {
+                title: {
+                    text: 'Fruit eaten'
+                }
+            },
+            series: []
+        });
+
+        var request = new XMLHttpRequest();
+
+        request.open('GET', '@Url.Action(nameof(MoneyTracker.Web.Controllers.HomeController.GetData), new { @cachebust = DateTime.UtcNow.ToString("u") })', true);
+
+        request.onload = function () {
+            if (this.status >= 200 && this.status < 400) {
+                var seriesList = JSON.parse(this.response);
+                Array.prototype.forEach.call(seriesList, function (e) {
+                    pd.Chart.addSeries({
+                        name: e.name,
+                        data: e.data
+                    });
+                });
+
+            } else {
+                //todo: We reached our target server, but it returned an error
+                console.log('We reached our target server, but it returned an error');
+            }
+        };
+
+        request.onerror = function (a, b, c, d, e, f) {
+            //todo: There was a connection error of some sort
+            console.log('There was a connection error of some sort');
+        };
+
+        request.send();
+
+    });
+
+</script>*@

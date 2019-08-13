@@ -1,0 +1,41 @@
+$color-text-base: black;
+
+body {
+    color: $color-text-base;
+}
+
+a:link {
+    color: black;
+}
+
+a:visited {
+    color: #6938d2;
+}
+
+a:hover {
+    color: #d27838;
+}
+
+a:active {
+    color: blue;
+}
+
+a:focus {
+    color: blueviolet;
+}
+
+.btn {
+    color: $color-text-base;
+}
+
+a.btn {
+    color: $color-text-base;
+}
+
+.site-navigation {
+
+    a {
+        color: $color-text-base;
+    }
+
+}

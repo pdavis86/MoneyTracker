@@ -1,0 +1,17 @@
+.btn {
+    padding: 4px 30px;
+    border-radius: 4px;
+    line-height: 1.5;
+    vertical-align: top;
+    cursor: pointer;
+}
+
+a.btn {
+    text-decoration: none;
+}
+
+button,
+input[type="button"],
+input[type="submit"] {
+    border: none;
+}
