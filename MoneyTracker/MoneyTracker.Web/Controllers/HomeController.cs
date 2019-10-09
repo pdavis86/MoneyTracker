@@ -37,6 +37,32 @@ namespace MoneyTracker.Web.Controllers
                 });
             }
 
+            seriesList.Add(new ViewModels.Series
+            {
+                Title = "[All Income]",
+                Data = dateGrouping.Select(g => g
+                    .Where(r => r.Value >= 0)
+                    .Sum(r => r.Value)
+                    )
+            });
+
+            seriesList.Add(new ViewModels.Series
+            {
+                Title = "[All Expenditure]",
+                Data = dateGrouping.Select(g => g
+                    .Where(r => r.Value < 0)
+                    .Sum(r => r.Value * -1)
+                    )
+            });
+
+            seriesList.Add(new ViewModels.Series
+            {
+                Title = "[All]",
+                Data = dateGrouping.Select(g => g
+                    .Sum(r => r.Value)
+                    )
+            });
+
             return new JsonResult()
             {
                 Data = new ViewModels.Chart
