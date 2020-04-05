@@ -147,7 +147,7 @@ namespace MoneyTracker
                 var rowNum = grdDataView.Rows.Add();
                 grdDataView.Rows[rowNum].Cells["Date"].Value = record.Date;
                 grdDataView.Rows[rowNum].Cells["Description"].Value = record.Description;
-                grdDataView.Rows[rowNum].Cells["Value"].Value = record.Amount * -1;
+                grdDataView.Rows[rowNum].Cells["Value"].Value = record.DebitCreditCode == Core.Models.CapitalOne.Transaction.DebitCreditCodes.Debit ? record.Amount * -1 : record.Amount;
             }
         }
 

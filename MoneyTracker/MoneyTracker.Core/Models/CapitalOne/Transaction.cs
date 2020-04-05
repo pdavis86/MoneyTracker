@@ -5,6 +5,11 @@ namespace MoneyTracker.Core.Models.CapitalOne
 {
     public class Transaction
     {
+        public static class DebitCreditCodes
+        {
+            public const string Debit = "Debit";
+        }
+
         [Name("date")]
         public DateTime Date { get; set; }
 
