@@ -45,19 +45,19 @@ namespace MoneyTracker
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.btnImport = new System.Windows.Forms.Button();
-            this.decNet = new DecimalBoxControl();
-            this.decStudent = new DecimalBoxControl();
-            this.decPension = new DecimalBoxControl();
-            this.decNi = new DecimalBoxControl();
-            this.decTax = new DecimalBoxControl();
-            this.decUnpaid = new DecimalBoxControl();
-            this.decBonus = new DecimalBoxControl();
-            this.decOvertime = new DecimalBoxControl();
-            this.decSsp = new DecimalBoxControl();
-            this.decBasic = new DecimalBoxControl();
+            this.decNet = new MoneyTracker.CustomControls.DecimalBoxControl();
+            this.decStudent = new MoneyTracker.CustomControls.DecimalBoxControl();
+            this.decPension = new MoneyTracker.CustomControls.DecimalBoxControl();
+            this.decNi = new MoneyTracker.CustomControls.DecimalBoxControl();
+            this.decTax = new MoneyTracker.CustomControls.DecimalBoxControl();
+            this.decUnpaid = new MoneyTracker.CustomControls.DecimalBoxControl();
+            this.decBonus = new MoneyTracker.CustomControls.DecimalBoxControl();
+            this.decOvertime = new MoneyTracker.CustomControls.DecimalBoxControl();
+            this.decSsp = new MoneyTracker.CustomControls.DecimalBoxControl();
+            this.decBasic = new MoneyTracker.CustomControls.DecimalBoxControl();
             this.label13 = new System.Windows.Forms.Label();
-            this.decBackPay = new DecimalBoxControl();
-            this.decHolidayPay = new DecimalBoxControl();
+            this.decBackPay = new MoneyTracker.CustomControls.DecimalBoxControl();
+            this.decHolidayPay = new MoneyTracker.CustomControls.DecimalBoxControl();
             this.label14 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -217,6 +217,7 @@ namespace MoneyTracker
             // 
             // decStudent
             // 
+            this.decStudent.Enabled = false;
             this.decStudent.Location = new System.Drawing.Point(373, 165);
             this.decStudent.Name = "decStudent";
             this.decStudent.Size = new System.Drawing.Size(100, 20);
@@ -249,6 +250,7 @@ namespace MoneyTracker
             // 
             // decUnpaid
             // 
+            this.decUnpaid.Enabled = false;
             this.decUnpaid.Location = new System.Drawing.Point(118, 188);
             this.decUnpaid.Name = "decUnpaid";
             this.decUnpaid.Size = new System.Drawing.Size(100, 20);
@@ -257,6 +259,7 @@ namespace MoneyTracker
             // 
             // decBonus
             // 
+            this.decBonus.Enabled = false;
             this.decBonus.Location = new System.Drawing.Point(118, 162);
             this.decBonus.Name = "decBonus";
             this.decBonus.Size = new System.Drawing.Size(100, 20);
@@ -265,6 +268,7 @@ namespace MoneyTracker
             // 
             // decOvertime
             // 
+            this.decOvertime.Enabled = false;
             this.decOvertime.Location = new System.Drawing.Point(118, 136);
             this.decOvertime.Name = "decOvertime";
             this.decOvertime.Size = new System.Drawing.Size(100, 20);
@@ -273,6 +277,7 @@ namespace MoneyTracker
             // 
             // decSsp
             // 
+            this.decSsp.Enabled = false;
             this.decSsp.Location = new System.Drawing.Point(118, 110);
             this.decSsp.Name = "decSsp";
             this.decSsp.Size = new System.Drawing.Size(100, 20);
@@ -298,6 +303,7 @@ namespace MoneyTracker
             // 
             // decBackPay
             // 
+            this.decBackPay.Enabled = false;
             this.decBackPay.Location = new System.Drawing.Point(118, 214);
             this.decBackPay.Name = "decBackPay";
             this.decBackPay.Size = new System.Drawing.Size(100, 20);
@@ -306,6 +312,7 @@ namespace MoneyTracker
             // 
             // decHolidayPay
             // 
+            this.decHolidayPay.Enabled = false;
             this.decHolidayPay.Location = new System.Drawing.Point(118, 240);
             this.decHolidayPay.Name = "decHolidayPay";
             this.decHolidayPay.Size = new System.Drawing.Size(100, 20);
