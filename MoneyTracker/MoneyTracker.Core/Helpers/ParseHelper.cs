@@ -14,7 +14,7 @@ namespace MoneyTracker.Core.Helpers
             return StringHelper.ReadableAsciiOnly(streamReader.ReadLine());
         }
 
-        public static List<Data.Entities.Transaction> LoadDataFromSantander(StreamReader streamReader)
+        public static List<Data.Entities.Transaction> LoadDataFromSantander(string filePath)
         {
             const string gbCultureCode = "en-GB";
             const string gbpSuffix = " GBP";
@@ -29,35 +29,39 @@ namespace MoneyTracker.Core.Helpers
             var transactions = new List<Data.Entities.Transaction>();
             var ukDtfi = new CultureInfo(gbCultureCode, false).DateTimeFormat;
 
-            //Read past the first four lines
-            streamReader.ReadLine();
-            streamReader.ReadLine();
-            streamReader.ReadLine();
-            streamReader.ReadLine();
-
-            while (streamReader.EndOfStream == false)
+            using (var streamReader = new StreamReader(filePath))
             {
-                var date = GetNextLine(streamReader).Substring(prefixDate.Length + 1);
-                var description = GetNextLine(streamReader).Substring(prefixDescription.Length + 1);
-                var value = GetNextLine(streamReader).Substring(prefixAmount.Length + 1).Replace(gbpSuffix, "");
-                var balance = GetNextLine(streamReader).Substring(prefixBalance.Length + 1).Replace(gbpSuffix, "");
-                transactions.Add(new Data.Entities.Transaction()
-                {
-                    Date = Convert.ToDateTime(date, ukDtfi),
-                    Description = description,
-                    Value = decimal.Parse(value),
-                    Balance = decimal.Parse(balance)
-                });
-
-                //Read the blank line
+                //Read past the first four lines
                 streamReader.ReadLine();
+                streamReader.ReadLine();
+                streamReader.ReadLine();
+                streamReader.ReadLine();
+
+                while (streamReader.EndOfStream == false)
+                {
+                    var date = GetNextLine(streamReader).Substring(prefixDate.Length + 1);
+                    var description = GetNextLine(streamReader).Substring(prefixDescription.Length + 1);
+                    var value = GetNextLine(streamReader).Substring(prefixAmount.Length + 1).Replace(gbpSuffix, "");
+                    var balance = GetNextLine(streamReader).Substring(prefixBalance.Length + 1).Replace(gbpSuffix, "");
+                    transactions.Add(new Data.Entities.Transaction()
+                    {
+                        Date = Convert.ToDateTime(date, ukDtfi),
+                        Description = description,
+                        Value = decimal.Parse(value),
+                        Balance = decimal.Parse(balance)
+                    });
+
+                    //Read the blank line
+                    streamReader.ReadLine();
+                }
             }
 
             return transactions;
         }
 
-        public static List<Models.CapitalOne.Transaction> LoadDataFromCapitalOne(StreamReader streamReader)
+        public static List<Models.CapitalOne.Transaction> LoadDataFromCapitalOne(string filePath)
         {
+            using (var streamReader = new StreamReader(filePath))
             using (var csv = new CsvReader(streamReader))
             {
                 return csv.GetRecords<Models.CapitalOne.Transaction>().ToList();

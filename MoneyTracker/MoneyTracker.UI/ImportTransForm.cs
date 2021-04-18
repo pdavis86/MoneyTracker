@@ -108,22 +108,19 @@ namespace MoneyTracker
 
             txtImportFile.Text = _openDialog.FileName;
 
-            using (var streamReader = new StreamReader(_openDialog.FileName))
+            //todo: check the mapping to see which method to use
+            switch (AccountId)
             {
-                //todo: check the mapping to see which method to use
-                switch (_openDialog.FilterIndex)
-                {
-                    case 1:
-                        LoadDataFromSantander(streamReader);
-                        break;
+                case 4:
+                    LoadDataFromSantander(_openDialog.FileName);
+                    break;
 
-                    case 2:
-                        LoadDataFromCapitalOne(streamReader);
-                        break;
+                case 7:
+                    LoadDataFromCapitalOne(_openDialog.FileName);
+                    break;
 
-                    default:
-                        throw new Exception("Unexpected filter index");
-                }
+                default:
+                    throw new Exception("Unexpected filter index");
             }
 
             if (grdDataView.Rows.Count == 0)
@@ -135,10 +132,10 @@ namespace MoneyTracker
             grdDataView.Rows[0].Selected = true;
         }
 
-        private void LoadDataFromSantander(StreamReader streamReader)
+        private void LoadDataFromSantander(string filePath)
         {
             List<Transaction> transactions = null;
-            Task.Run(() => transactions = Core.Helpers.ParseHelper.LoadDataFromSantander(streamReader)).Wait();
+            Task.Run(() => transactions = Core.Helpers.ParseHelper.LoadDataFromSantander(filePath)).Wait();
             foreach (var record in transactions)
             {
                 var rowNum = grdDataView.Rows.Add();
@@ -149,10 +146,10 @@ namespace MoneyTracker
             }
         }
 
-        private void LoadDataFromCapitalOne(StreamReader streamReader)
+        private void LoadDataFromCapitalOne(string filePath)
         {
             IEnumerable<Core.Models.CapitalOne.Transaction> transactions = null;
-            Task.Run(() => transactions = Core.Helpers.ParseHelper.LoadDataFromCapitalOne(streamReader)).Wait();
+            Task.Run(() => transactions = Core.Helpers.ParseHelper.LoadDataFromCapitalOne(filePath)).Wait();
             foreach (var record in transactions)
             {
                 var rowNum = grdDataView.Rows.Add();
