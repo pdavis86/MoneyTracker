@@ -89,7 +89,17 @@ namespace MoneyTracker
 
         private void LoadSourceData()
         {
-            _openDialog.Filter = "Santander TEXT File|*.txt|Capital One CSV file|*.csv";
+            //todo: get this mapping from somewhere
+            switch (AccountId)
+            {
+                case 4:
+                    _openDialog.Filter = "Santander TEXT File|*.txt";
+                    break;
+
+                case 7:
+                    _openDialog.Filter = "Capital One CSV file|*.csv";
+                    break;
+            }
 
             if (_openDialog.ShowDialog() != DialogResult.OK)
             {
@@ -100,6 +110,7 @@ namespace MoneyTracker
 
             using (var streamReader = new StreamReader(_openDialog.FileName))
             {
+                //todo: check the mapping to see which method to use
                 switch (_openDialog.FilterIndex)
                 {
                     case 1:
