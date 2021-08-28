@@ -99,6 +99,14 @@ namespace MoneyTracker
                 case 7:
                     _openDialog.Filter = "Capital One CSV file|*.csv";
                     break;
+
+                case 8:
+                    _openDialog.Filter = "Starling Bank CSV file|*.csv";
+                    break;
+
+                case 9:
+                    _openDialog.Filter = "First Direct CSV file|*.csv";
+                    break;
             }
 
             if (_openDialog.ShowDialog() != DialogResult.OK)
@@ -117,6 +125,10 @@ namespace MoneyTracker
 
                 case 7:
                     LoadDataFromCapitalOne(_openDialog.FileName);
+                    break;
+
+                case 8:
+                    LoadDataFromStarlingBank(_openDialog.FileName);
                     break;
 
                 default:
@@ -148,15 +160,41 @@ namespace MoneyTracker
 
         private void LoadDataFromCapitalOne(string filePath)
         {
-            IEnumerable<Core.Models.CapitalOne.Transaction> transactions = null;
-            Task.Run(() => transactions = Core.Helpers.ParseHelper.LoadDataFromCapitalOne(filePath)).Wait();
+            IEnumerable<Core.Models.CapitalOneTransaction> transactions = null;
+            Task.Run(() => transactions = Core.Helpers.ParseHelper.LoadData<Core.Models.CapitalOneTransaction>(filePath)).Wait();
             foreach (var record in transactions)
             {
                 var rowNum = grdDataView.Rows.Add();
                 grdDataView.Rows[rowNum].Cells["Date"].Value = record.Date;
                 grdDataView.Rows[rowNum].Cells["Description"].Value = record.Description;
-                grdDataView.Rows[rowNum].Cells["Value"].Value = record.DebitCreditCode == Core.Models.CapitalOne.Transaction.DebitCreditCodes.Debit ? record.Amount * -1 : record.Amount;
+                grdDataView.Rows[rowNum].Cells["Value"].Value = record.DebitCreditCode == Core.Models.CapitalOneTransaction.DebitCreditCodes.Debit ? record.Amount * -1 : record.Amount;
             }
+        }
+
+        private void LoadDataFromStarlingBank(string filePath)
+        {
+            IEnumerable<Core.Models.StarlingTransaction> transactions = null;
+            Task.Run(() => transactions = Core.Helpers.ParseHelper.LoadData<Core.Models.StarlingTransaction>(filePath)).Wait();
+            foreach (var record in transactions)
+            {
+                var rowNum = grdDataView.Rows.Add();
+                grdDataView.Rows[rowNum].Cells["Date"].Value = record.Date;
+                grdDataView.Rows[rowNum].Cells["Description"].Value = GetDesc(record);
+                grdDataView.Rows[rowNum].Cells["Value"].Value = record.Amount;
+                grdDataView.Rows[rowNum].Cells["Balance"].Value = record.Balance;
+                //todo: map these values - grdDataView.Rows[rowNum].Cells["Type"].Value = record.Type;
+            }
+        }
+
+        //todo: move this
+        private string GetDesc(Core.Models.StarlingTransaction transaction)
+        {
+            var spacePos = transaction.CounterParty.IndexOf(" ");
+            var firstWord = spacePos == -1 ? transaction.CounterParty : transaction.CounterParty.Substring(0, spacePos - 1);
+
+            return transaction.Reference.ToLower().Contains(firstWord.ToLower())
+                ? transaction.Reference
+                : transaction.CounterParty + ", " + transaction.Reference;
         }
 
         private void BuildGrid()

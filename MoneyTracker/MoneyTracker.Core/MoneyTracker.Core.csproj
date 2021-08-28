@@ -56,9 +56,10 @@
   <ItemGroup>
     <Compile Include="Factories\DatabaseServiceFactory.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
+    <Compile Include="Models\StarlingTransaction.cs" />
     <Compile Include="Services\DatabaseService.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="Models\CapitalOne\Transaction.cs" />
+    <Compile Include="Models\CapitalOneTransaction.cs" />
     <Compile Include="Helpers\ParseHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

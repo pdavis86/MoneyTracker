@@ -59,12 +59,12 @@ namespace MoneyTracker.Core.Helpers
             return transactions;
         }
 
-        public static List<Models.CapitalOne.Transaction> LoadDataFromCapitalOne(string filePath)
+        public static List<T> LoadData<T>(string filePath)
         {
             using (var streamReader = new StreamReader(filePath))
             using (var csv = new CsvReader(streamReader))
             {
-                return csv.GetRecords<Models.CapitalOne.Transaction>().ToList();
+                return csv.GetRecords<T>().ToList();
             }
         }
 

@@ -1,9 +1,9 @@
 ﻿using CsvHelper.Configuration.Attributes;
 using System;
 
-namespace MoneyTracker.Core.Models.CapitalOne
+namespace MoneyTracker.Core.Models
 {
-    public class Transaction
+    public class CapitalOneTransaction
     {
         public static class DebitCreditCodes
         {
