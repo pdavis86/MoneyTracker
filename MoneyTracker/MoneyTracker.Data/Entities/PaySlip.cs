@@ -28,6 +28,8 @@ namespace MoneyTracker.Data.Entities
 
         public decimal? HolidayPay { get; set; }
 
+        public decimal? WorkingFromHome { get; set; }
+
         public decimal Tax { get; set; }
 
         public decimal NationalInsurance { get; set; }

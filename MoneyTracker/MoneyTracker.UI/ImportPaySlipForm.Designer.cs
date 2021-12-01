@@ -45,6 +45,12 @@ namespace MoneyTracker
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.btnImport = new System.Windows.Forms.Button();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.decWorkingFromHome = new MoneyTracker.CustomControls.DecimalBoxControl();
+            this.decHolidayPay = new MoneyTracker.CustomControls.DecimalBoxControl();
+            this.decBackPay = new MoneyTracker.CustomControls.DecimalBoxControl();
             this.decNet = new MoneyTracker.CustomControls.DecimalBoxControl();
             this.decStudent = new MoneyTracker.CustomControls.DecimalBoxControl();
             this.decPension = new MoneyTracker.CustomControls.DecimalBoxControl();
@@ -55,10 +61,6 @@ namespace MoneyTracker
             this.decOvertime = new MoneyTracker.CustomControls.DecimalBoxControl();
             this.decSsp = new MoneyTracker.CustomControls.DecimalBoxControl();
             this.decBasic = new MoneyTracker.CustomControls.DecimalBoxControl();
-            this.label13 = new System.Windows.Forms.Label();
-            this.decBackPay = new MoneyTracker.CustomControls.DecimalBoxControl();
-            this.decHolidayPay = new MoneyTracker.CustomControls.DecimalBoxControl();
-            this.label14 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -200,10 +202,62 @@ namespace MoneyTracker
             this.btnImport.Location = new System.Drawing.Point(404, 283);
             this.btnImport.Name = "btnImport";
             this.btnImport.Size = new System.Drawing.Size(75, 23);
-            this.btnImport.TabIndex = 13;
+            this.btnImport.TabIndex = 14;
             this.btnImport.Text = "&Import";
             this.btnImport.UseVisualStyleBackColor = true;
             this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(12, 217);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(56, 13);
+            this.label13.TabIndex = 29;
+            this.label13.Text = "Back-Pay:";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(12, 243);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(66, 13);
+            this.label14.TabIndex = 31;
+            this.label14.Text = "Holiday Pay:";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(12, 269);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(102, 13);
+            this.label15.TabIndex = 33;
+            this.label15.Text = "Working from home:";
+            // 
+            // decWorkingFromHome
+            // 
+            this.decWorkingFromHome.Location = new System.Drawing.Point(118, 266);
+            this.decWorkingFromHome.Name = "decWorkingFromHome";
+            this.decWorkingFromHome.Size = new System.Drawing.Size(100, 20);
+            this.decWorkingFromHome.TabIndex = 8;
+            this.decWorkingFromHome.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // decHolidayPay
+            // 
+            this.decHolidayPay.Location = new System.Drawing.Point(118, 240);
+            this.decHolidayPay.Name = "decHolidayPay";
+            this.decHolidayPay.Size = new System.Drawing.Size(100, 20);
+            this.decHolidayPay.TabIndex = 7;
+            this.decHolidayPay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // decBackPay
+            // 
+            this.decBackPay.Enabled = false;
+            this.decBackPay.Location = new System.Drawing.Point(118, 214);
+            this.decBackPay.Name = "decBackPay";
+            this.decBackPay.Size = new System.Drawing.Size(100, 20);
+            this.decBackPay.TabIndex = 6;
+            this.decBackPay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // decNet
             // 
@@ -211,7 +265,7 @@ namespace MoneyTracker
             this.decNet.Location = new System.Drawing.Point(298, 283);
             this.decNet.Name = "decNet";
             this.decNet.Size = new System.Drawing.Size(100, 20);
-            this.decNet.TabIndex = 12;
+            this.decNet.TabIndex = 13;
             this.decNet.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.decNet.TextChanged += new System.EventHandler(this.decNet_TextChanged);
             // 
@@ -221,7 +275,7 @@ namespace MoneyTracker
             this.decStudent.Location = new System.Drawing.Point(373, 165);
             this.decStudent.Name = "decStudent";
             this.decStudent.Size = new System.Drawing.Size(100, 20);
-            this.decStudent.TabIndex = 11;
+            this.decStudent.TabIndex = 12;
             this.decStudent.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // decPension
@@ -229,7 +283,7 @@ namespace MoneyTracker
             this.decPension.Location = new System.Drawing.Point(373, 139);
             this.decPension.Name = "decPension";
             this.decPension.Size = new System.Drawing.Size(100, 20);
-            this.decPension.TabIndex = 10;
+            this.decPension.TabIndex = 11;
             this.decPension.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // decNi
@@ -237,7 +291,7 @@ namespace MoneyTracker
             this.decNi.Location = new System.Drawing.Point(373, 113);
             this.decNi.Name = "decNi";
             this.decNi.Size = new System.Drawing.Size(100, 20);
-            this.decNi.TabIndex = 9;
+            this.decNi.TabIndex = 10;
             this.decNi.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // decTax
@@ -245,7 +299,7 @@ namespace MoneyTracker
             this.decTax.Location = new System.Drawing.Point(373, 87);
             this.decTax.Name = "decTax";
             this.decTax.Size = new System.Drawing.Size(100, 20);
-            this.decTax.TabIndex = 8;
+            this.decTax.TabIndex = 9;
             this.decTax.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // decUnpaid
@@ -292,47 +346,13 @@ namespace MoneyTracker
             this.decBasic.TabIndex = 1;
             this.decBasic.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(12, 217);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(56, 13);
-            this.label13.TabIndex = 29;
-            this.label13.Text = "Back-Pay:";
-            // 
-            // decBackPay
-            // 
-            this.decBackPay.Enabled = false;
-            this.decBackPay.Location = new System.Drawing.Point(118, 214);
-            this.decBackPay.Name = "decBackPay";
-            this.decBackPay.Size = new System.Drawing.Size(100, 20);
-            this.decBackPay.TabIndex = 6;
-            this.decBackPay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // decHolidayPay
-            // 
-            this.decHolidayPay.Enabled = false;
-            this.decHolidayPay.Location = new System.Drawing.Point(118, 240);
-            this.decHolidayPay.Name = "decHolidayPay";
-            this.decHolidayPay.Size = new System.Drawing.Size(100, 20);
-            this.decHolidayPay.TabIndex = 7;
-            this.decHolidayPay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(12, 243);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(66, 13);
-            this.label14.TabIndex = 31;
-            this.label14.Text = "Holiday Pay:";
-            // 
             // ImportPaySlipForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(491, 318);
+            this.Controls.Add(this.label15);
+            this.Controls.Add(this.decWorkingFromHome);
             this.Controls.Add(this.label14);
             this.Controls.Add(this.decHolidayPay);
             this.Controls.Add(this.label13);
@@ -401,5 +421,7 @@ namespace MoneyTracker
         private DecimalBoxControl decBackPay;
         private DecimalBoxControl decHolidayPay;
         private System.Windows.Forms.Label label14;
+        private DecimalBoxControl decWorkingFromHome;
+        private System.Windows.Forms.Label label15;
     }
 }

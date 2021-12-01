@@ -4,6 +4,8 @@ namespace MoneyTracker.Data.Contexts
 {
     public class Context : DbContext
     {
+        public Context() : this("MoneyTrackerDatabase") { }
+
         public Context(string connStr) : base(connStr)
         {
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<Context, Migrations.Configuration>(true));

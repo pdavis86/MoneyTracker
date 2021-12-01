@@ -69,6 +69,10 @@
     <Compile Include="Migrations\201802031235441_Holiday Pay.Designer.cs">
       <DependentUpon>201802031235441_Holiday Pay.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202112011812426_Added WorkingFromHome.cs" />
+    <Compile Include="Migrations\202112011812426_Added WorkingFromHome.Designer.cs">
+      <DependentUpon>202112011812426_Added WorkingFromHome.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -85,6 +89,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201802031235441_Holiday Pay.resx">
       <DependentUpon>201802031235441_Holiday Pay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112011812426_Added WorkingFromHome.resx">
+      <DependentUpon>202112011812426_Added WorkingFromHome.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

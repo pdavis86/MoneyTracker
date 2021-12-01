@@ -1,5 +1,6 @@
 ﻿using MoneyTracker.Core.Services;
 using System;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace MoneyTracker
@@ -17,7 +18,7 @@ namespace MoneyTracker
 
         private void ImportPaySlipForm_Shown(object sender, EventArgs e)
         {
-            cboEmployers.DataSource = _databaseService.GetEmployers();
+            cboEmployers.DataSource = _databaseService.GetEmployers().Where(x => !x.Obsolete).ToList();
             cboEmployers.DisplayMember = "Description";
             cboEmployers.ValueMember = "EmployerId";
             cboEmployers.SelectedIndex = cboEmployers.Items.Count - 1;
@@ -66,9 +67,22 @@ namespace MoneyTracker
 
         private void ValidateInput()
         {
-            decimal payments = decBasic.ValueDecimal + decSsp.ValueDecimal + decOvertime.ValueDecimal + decBonus.ValueDecimal + decUnpaid.ValueDecimal + decBackPay.ValueDecimal + decHolidayPay.ValueDecimal;
-            decimal deductions = decTax.ValueDecimal + decNi.ValueDecimal + decPension.ValueDecimal + decStudent.ValueDecimal;
+            decimal payments = decBasic.ValueDecimal
+                + decSsp.ValueDecimal
+                + decOvertime.ValueDecimal
+                + decBonus.ValueDecimal
+                + decUnpaid.ValueDecimal
+                + decBackPay.ValueDecimal
+                + decHolidayPay.ValueDecimal
+                + decWorkingFromHome.ValueDecimal;
+
+            decimal deductions = decTax.ValueDecimal
+                + decNi.ValueDecimal
+                + decPension.ValueDecimal
+                + decStudent.ValueDecimal;
+
             decimal netCalcd = payments - deductions;
+
             btnImport.Enabled = decNet.Value == netCalcd;
         }
 

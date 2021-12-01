@@ -22,7 +22,8 @@ namespace MoneyTracker.CustomControls
         {
             if (!char.IsNumber(e.KeyChar)
                 && ((Keys)e.KeyChar != Keys.Back)
-                && (e.KeyChar != '.'))
+                && (e.KeyChar != '.')
+                && (e.KeyChar != '-'))
             {
                 e.Handled = true;
             }
@@ -44,13 +45,12 @@ namespace MoneyTracker.CustomControls
 
         protected override void OnValidating(CancelEventArgs e)
         {
-            const string twoDigitNumberFormat = "N2";
-
             base.OnValidating(e);
+
             if (!string.IsNullOrWhiteSpace(Text))
             {
                 decimal.TryParse(Text, out decimal value);
-                Text = value.ToString(twoDigitNumberFormat);
+                Text = value.ToString("N2");
             }
         }
 
