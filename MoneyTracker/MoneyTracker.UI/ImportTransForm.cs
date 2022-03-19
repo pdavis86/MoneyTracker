@@ -131,6 +131,10 @@ namespace MoneyTracker
                     LoadDataFromStarlingBank(_openDialog.FileName);
                     break;
 
+                case 9:
+                    LoadDataFromFirstDirect(_openDialog.FileName);
+                    break;
+
                 default:
                     throw new Exception("Unexpected filter index");
             }
@@ -179,22 +183,26 @@ namespace MoneyTracker
             {
                 var rowNum = grdDataView.Rows.Add();
                 grdDataView.Rows[rowNum].Cells["Date"].Value = record.Date;
-                grdDataView.Rows[rowNum].Cells["Description"].Value = GetDesc(record);
+                grdDataView.Rows[rowNum].Cells["Description"].Value = record.GetDesc();
                 grdDataView.Rows[rowNum].Cells["Value"].Value = record.Amount;
                 grdDataView.Rows[rowNum].Cells["Balance"].Value = record.Balance;
                 //todo: map these values - grdDataView.Rows[rowNum].Cells["Type"].Value = record.Type;
+                //todo: map spending category
             }
         }
 
-        //todo: move this
-        private string GetDesc(Core.Models.StarlingTransaction transaction)
+        private void LoadDataFromFirstDirect(string filePath)
         {
-            var spacePos = transaction.CounterParty.IndexOf(" ");
-            var firstWord = spacePos == -1 ? transaction.CounterParty : transaction.CounterParty.Substring(0, spacePos - 1);
-
-            return transaction.Reference.ToLower().Contains(firstWord.ToLower())
-                ? transaction.Reference
-                : transaction.CounterParty + ", " + transaction.Reference;
+            IEnumerable<Core.Models.FirstDirectTransaction> transactions = null;
+            Task.Run(() => transactions = Core.Helpers.ParseHelper.LoadData<Core.Models.FirstDirectTransaction>(filePath)).Wait();
+            foreach (var record in transactions.Reverse())
+            {
+                var rowNum = grdDataView.Rows.Add();
+                grdDataView.Rows[rowNum].Cells["Date"].Value = record.Date;
+                grdDataView.Rows[rowNum].Cells["Description"].Value = record.Description;
+                grdDataView.Rows[rowNum].Cells["Value"].Value = record.Amount;
+                grdDataView.Rows[rowNum].Cells["Balance"].Value = record.Balance;
+            }
         }
 
         private void BuildGrid()

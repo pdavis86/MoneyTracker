@@ -56,6 +56,7 @@
   <ItemGroup>
     <Compile Include="Factories\DatabaseServiceFactory.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
+    <Compile Include="Models\FirstDirectTransaction.cs" />
     <Compile Include="Models\StarlingTransaction.cs" />
     <Compile Include="Services\DatabaseService.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />

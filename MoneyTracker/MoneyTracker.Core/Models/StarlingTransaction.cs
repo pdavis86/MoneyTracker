@@ -26,5 +26,18 @@ namespace MoneyTracker.Core.Models
         [Name("Spending Category")]
         public string SpendingCategory { get; set; }
 
+        public string Notes { get; set; }
+
+
+        public string GetDesc()
+        {
+            var spacePos = CounterParty.IndexOf(" ");
+            var firstWord = spacePos == -1 ? CounterParty : CounterParty.Substring(0, spacePos - 1);
+
+            return Reference.ToLower().Contains(firstWord.ToLower())
+                ? Reference
+                : CounterParty + ", " + Reference;
+        }
+
     }
 }

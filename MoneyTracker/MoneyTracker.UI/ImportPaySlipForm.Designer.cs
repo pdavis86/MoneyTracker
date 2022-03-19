@@ -244,6 +244,7 @@ namespace MoneyTracker
             // 
             // decHolidayPay
             // 
+            this.decHolidayPay.Enabled = false;
             this.decHolidayPay.Location = new System.Drawing.Point(118, 240);
             this.decHolidayPay.Name = "decHolidayPay";
             this.decHolidayPay.Size = new System.Drawing.Size(100, 20);

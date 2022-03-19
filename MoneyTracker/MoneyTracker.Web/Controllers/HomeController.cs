@@ -16,6 +16,11 @@ namespace MoneyTracker.Web.Controllers
         {
             var db = Core.Factories.DatabaseServiceFactory.GetNewDatabaseService();
             var data = db.GetTransactionsBetween(DateTime.Now.AddMonths(-12), DateTime.Now);
+
+            //todo: don't include this month
+            //todo: remove
+            data = data.Where(x => x.AccountId == 8).ToList();
+
             var categories = db.GetTransactionCategories();
 
             var dateGrouping = data
