@@ -1,3 +1,1 @@
-GitLab recommended I add this as doco
-
-Created with help from https://msdn.microsoft.com/en-us/data/jj193542.aspx
+A small app I use to track where my money is going
