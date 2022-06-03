@@ -4,7 +4,6 @@ using MoneyTracker.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -15,6 +14,8 @@ namespace MoneyTracker
     {
         private readonly OpenFileDialog _openDialog;
         private readonly DatabaseService _databaseService;
+        
+        private List<TransactionCategory> _categories;
 
         public int AccountId { private get; set; }
 
@@ -186,9 +187,38 @@ namespace MoneyTracker
                 grdDataView.Rows[rowNum].Cells["Description"].Value = record.GetDesc();
                 grdDataView.Rows[rowNum].Cells["Value"].Value = record.Amount;
                 grdDataView.Rows[rowNum].Cells["Balance"].Value = record.Balance;
-                //todo: map these values - grdDataView.Rows[rowNum].Cells["Type"].Value = record.Type;
-                //todo: map spending category
+                GetCategoryFromStarlingBank(rowNum, record);
             }
+        }
+
+        private void GetCategoryFromStarlingBank(int rowNum, Core.Models.StarlingTransaction record)
+        {
+            string searchStr;
+
+            switch (record.SpendingCategory)
+            {
+                case "BILLS_AND_SERVICES": searchStr = "bills"; break;
+                case "EATING_OUT": searchStr = "eating out"; break;
+                case "ENTERTAINMENT": searchStr = "entertainment"; break;
+                case "GENERAL": searchStr = "all other"; break;
+                case "GROCERIES": searchStr = "supermarket"; break;
+                case "HOME": searchStr = "diy"; break;
+                case "INCOME": searchStr = "salary"; break;
+                //case "LIFESTYLE":
+                case "PAYMENTS": searchStr = "loan payment"; break;
+                case "PETS": searchStr = "pets"; break;
+                case "SHOPPING": searchStr = "high street"; break;
+                default: return;
+            }
+
+            var match = _categories.FirstOrDefault(x => x.Description.ToLower().Contains(searchStr));
+
+            if (match == null)
+            {
+                return;
+            }
+
+            grdDataView.Rows[rowNum].Cells["CategoryId"].Value = match.CategoryId;
         }
 
         private void LoadDataFromFirstDirect(string filePath)
@@ -215,7 +245,7 @@ namespace MoneyTracker
             DataGridViewComboBoxCell categs = null;
             DataGridViewComboBoxCell types = null;
             Task.WaitAll(
-                Task.Run(() => categs = GetTransCategCombo()),
+                Task.Run(() => categs = GetTransactionCategoryCombo()),
                 Task.Run(() => types = GetTransTypeCombo())
                 );
 
@@ -343,13 +373,17 @@ namespace MoneyTracker
             };
         }
 
-        private DataGridViewComboBoxCell GetTransCategCombo()
+        private DataGridViewComboBoxCell GetTransactionCategoryCombo()
         {
             var list = new List<TransactionCategory>
             {
                 new TransactionCategory()
             };
-            list.AddRange(_databaseService.GetTransactionCategories().Where(c => !c.Obsolete).OrderBy(c => c.Description));
+
+            _categories = _databaseService.GetTransactionCategories().Where(c => !c.Obsolete).ToList();
+
+            list.AddRange(_categories.OrderBy(c => c.Description));
+            
             return new DataGridViewComboBoxCell
             {
                 DataSource = list,
