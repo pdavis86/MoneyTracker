@@ -61,6 +61,14 @@ namespace MoneyTracker
             this.decOvertime = new MoneyTracker.CustomControls.DecimalBoxControl();
             this.decSsp = new MoneyTracker.CustomControls.DecimalBoxControl();
             this.decBasic = new MoneyTracker.CustomControls.DecimalBoxControl();
+            this.chkSsp = new System.Windows.Forms.CheckBox();
+            this.chkOvertime = new System.Windows.Forms.CheckBox();
+            this.chkBonus = new System.Windows.Forms.CheckBox();
+            this.chkUnpaid = new System.Windows.Forms.CheckBox();
+            this.chkBackPay = new System.Windows.Forms.CheckBox();
+            this.chkHolidayPay = new System.Windows.Forms.CheckBox();
+            this.chkWorkingFromHome = new System.Windows.Forms.CheckBox();
+            this.chkStudent = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -80,7 +88,7 @@ namespace MoneyTracker
             this.cboEmployers.FormattingEnabled = true;
             this.cboEmployers.Location = new System.Drawing.Point(118, 12);
             this.cboEmployers.Name = "cboEmployers";
-            this.cboEmployers.Size = new System.Drawing.Size(361, 21);
+            this.cboEmployers.Size = new System.Drawing.Size(449, 21);
             this.cboEmployers.TabIndex = 14;
             // 
             // dtpDate
@@ -91,7 +99,7 @@ namespace MoneyTracker
             this.dtpDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dtpDate.Location = new System.Drawing.Point(118, 39);
             this.dtpDate.Name = "dtpDate";
-            this.dtpDate.Size = new System.Drawing.Size(361, 20);
+            this.dtpDate.Size = new System.Drawing.Size(449, 20);
             this.dtpDate.TabIndex = 0;
             this.dtpDate.Leave += new System.EventHandler(this.dtpDate_Leave);
             // 
@@ -107,7 +115,7 @@ namespace MoneyTracker
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 87);
+            this.label3.Location = new System.Drawing.Point(32, 88);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(36, 13);
             this.label3.TabIndex = 17;
@@ -116,7 +124,7 @@ namespace MoneyTracker
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 113);
+            this.label4.Location = new System.Drawing.Point(32, 114);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(78, 13);
             this.label4.TabIndex = 18;
@@ -125,7 +133,7 @@ namespace MoneyTracker
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(12, 139);
+            this.label5.Location = new System.Drawing.Point(32, 140);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(52, 13);
             this.label5.TabIndex = 19;
@@ -134,7 +142,7 @@ namespace MoneyTracker
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(12, 165);
+            this.label6.Location = new System.Drawing.Point(32, 166);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(40, 13);
             this.label6.TabIndex = 20;
@@ -143,7 +151,7 @@ namespace MoneyTracker
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(12, 191);
+            this.label7.Location = new System.Drawing.Point(32, 192);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(65, 13);
             this.label7.TabIndex = 21;
@@ -152,7 +160,7 @@ namespace MoneyTracker
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(267, 90);
+            this.label8.Location = new System.Drawing.Point(331, 91);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(28, 13);
             this.label8.TabIndex = 22;
@@ -161,7 +169,7 @@ namespace MoneyTracker
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(267, 116);
+            this.label9.Location = new System.Drawing.Point(331, 117);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(99, 13);
             this.label9.TabIndex = 23;
@@ -170,7 +178,7 @@ namespace MoneyTracker
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(267, 142);
+            this.label10.Location = new System.Drawing.Point(331, 143);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(48, 13);
             this.label10.TabIndex = 24;
@@ -179,7 +187,7 @@ namespace MoneyTracker
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(267, 168);
+            this.label11.Location = new System.Drawing.Point(331, 169);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(74, 13);
             this.label11.TabIndex = 25;
@@ -189,7 +197,7 @@ namespace MoneyTracker
             // 
             this.label12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(265, 286);
+            this.label12.Location = new System.Drawing.Point(353, 323);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(27, 13);
             this.label12.TabIndex = 26;
@@ -199,7 +207,7 @@ namespace MoneyTracker
             // 
             this.btnImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnImport.Enabled = false;
-            this.btnImport.Location = new System.Drawing.Point(404, 283);
+            this.btnImport.Location = new System.Drawing.Point(492, 320);
             this.btnImport.Name = "btnImport";
             this.btnImport.Size = new System.Drawing.Size(75, 23);
             this.btnImport.TabIndex = 14;
@@ -210,7 +218,7 @@ namespace MoneyTracker
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(12, 217);
+            this.label13.Location = new System.Drawing.Point(32, 218);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(56, 13);
             this.label13.TabIndex = 29;
@@ -219,7 +227,7 @@ namespace MoneyTracker
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(12, 243);
+            this.label14.Location = new System.Drawing.Point(32, 244);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(66, 13);
             this.label14.TabIndex = 31;
@@ -228,7 +236,7 @@ namespace MoneyTracker
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(12, 269);
+            this.label15.Location = new System.Drawing.Point(32, 270);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(102, 13);
             this.label15.TabIndex = 33;
@@ -236,7 +244,7 @@ namespace MoneyTracker
             // 
             // decWorkingFromHome
             // 
-            this.decWorkingFromHome.Location = new System.Drawing.Point(118, 266);
+            this.decWorkingFromHome.Location = new System.Drawing.Point(138, 267);
             this.decWorkingFromHome.Name = "decWorkingFromHome";
             this.decWorkingFromHome.Size = new System.Drawing.Size(100, 20);
             this.decWorkingFromHome.TabIndex = 8;
@@ -245,7 +253,7 @@ namespace MoneyTracker
             // decHolidayPay
             // 
             this.decHolidayPay.Enabled = false;
-            this.decHolidayPay.Location = new System.Drawing.Point(118, 240);
+            this.decHolidayPay.Location = new System.Drawing.Point(138, 241);
             this.decHolidayPay.Name = "decHolidayPay";
             this.decHolidayPay.Size = new System.Drawing.Size(100, 20);
             this.decHolidayPay.TabIndex = 7;
@@ -254,7 +262,7 @@ namespace MoneyTracker
             // decBackPay
             // 
             this.decBackPay.Enabled = false;
-            this.decBackPay.Location = new System.Drawing.Point(118, 214);
+            this.decBackPay.Location = new System.Drawing.Point(138, 215);
             this.decBackPay.Name = "decBackPay";
             this.decBackPay.Size = new System.Drawing.Size(100, 20);
             this.decBackPay.TabIndex = 6;
@@ -263,7 +271,7 @@ namespace MoneyTracker
             // decNet
             // 
             this.decNet.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.decNet.Location = new System.Drawing.Point(298, 283);
+            this.decNet.Location = new System.Drawing.Point(386, 320);
             this.decNet.Name = "decNet";
             this.decNet.Size = new System.Drawing.Size(100, 20);
             this.decNet.TabIndex = 13;
@@ -273,7 +281,7 @@ namespace MoneyTracker
             // decStudent
             // 
             this.decStudent.Enabled = false;
-            this.decStudent.Location = new System.Drawing.Point(373, 165);
+            this.decStudent.Location = new System.Drawing.Point(437, 166);
             this.decStudent.Name = "decStudent";
             this.decStudent.Size = new System.Drawing.Size(100, 20);
             this.decStudent.TabIndex = 12;
@@ -281,7 +289,7 @@ namespace MoneyTracker
             // 
             // decPension
             // 
-            this.decPension.Location = new System.Drawing.Point(373, 139);
+            this.decPension.Location = new System.Drawing.Point(437, 140);
             this.decPension.Name = "decPension";
             this.decPension.Size = new System.Drawing.Size(100, 20);
             this.decPension.TabIndex = 11;
@@ -289,7 +297,7 @@ namespace MoneyTracker
             // 
             // decNi
             // 
-            this.decNi.Location = new System.Drawing.Point(373, 113);
+            this.decNi.Location = new System.Drawing.Point(437, 114);
             this.decNi.Name = "decNi";
             this.decNi.Size = new System.Drawing.Size(100, 20);
             this.decNi.TabIndex = 10;
@@ -297,7 +305,7 @@ namespace MoneyTracker
             // 
             // decTax
             // 
-            this.decTax.Location = new System.Drawing.Point(373, 87);
+            this.decTax.Location = new System.Drawing.Point(437, 88);
             this.decTax.Name = "decTax";
             this.decTax.Size = new System.Drawing.Size(100, 20);
             this.decTax.TabIndex = 9;
@@ -306,7 +314,7 @@ namespace MoneyTracker
             // decUnpaid
             // 
             this.decUnpaid.Enabled = false;
-            this.decUnpaid.Location = new System.Drawing.Point(118, 188);
+            this.decUnpaid.Location = new System.Drawing.Point(138, 189);
             this.decUnpaid.Name = "decUnpaid";
             this.decUnpaid.Size = new System.Drawing.Size(100, 20);
             this.decUnpaid.TabIndex = 5;
@@ -315,7 +323,7 @@ namespace MoneyTracker
             // decBonus
             // 
             this.decBonus.Enabled = false;
-            this.decBonus.Location = new System.Drawing.Point(118, 162);
+            this.decBonus.Location = new System.Drawing.Point(138, 163);
             this.decBonus.Name = "decBonus";
             this.decBonus.Size = new System.Drawing.Size(100, 20);
             this.decBonus.TabIndex = 4;
@@ -324,7 +332,7 @@ namespace MoneyTracker
             // decOvertime
             // 
             this.decOvertime.Enabled = false;
-            this.decOvertime.Location = new System.Drawing.Point(118, 136);
+            this.decOvertime.Location = new System.Drawing.Point(138, 137);
             this.decOvertime.Name = "decOvertime";
             this.decOvertime.Size = new System.Drawing.Size(100, 20);
             this.decOvertime.TabIndex = 3;
@@ -333,7 +341,7 @@ namespace MoneyTracker
             // decSsp
             // 
             this.decSsp.Enabled = false;
-            this.decSsp.Location = new System.Drawing.Point(118, 110);
+            this.decSsp.Location = new System.Drawing.Point(138, 111);
             this.decSsp.Name = "decSsp";
             this.decSsp.Size = new System.Drawing.Size(100, 20);
             this.decSsp.TabIndex = 2;
@@ -341,17 +349,107 @@ namespace MoneyTracker
             // 
             // decBasic
             // 
-            this.decBasic.Location = new System.Drawing.Point(118, 84);
+            this.decBasic.Location = new System.Drawing.Point(138, 85);
             this.decBasic.Name = "decBasic";
             this.decBasic.Size = new System.Drawing.Size(100, 20);
             this.decBasic.TabIndex = 1;
             this.decBasic.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
+            // chkSsp
+            // 
+            this.chkSsp.AutoSize = true;
+            this.chkSsp.Location = new System.Drawing.Point(12, 113);
+            this.chkSsp.Name = "chkSsp";
+            this.chkSsp.Size = new System.Drawing.Size(15, 14);
+            this.chkSsp.TabIndex = 34;
+            this.chkSsp.UseVisualStyleBackColor = true;
+            this.chkSsp.CheckedChanged += new System.EventHandler(this.chkSsp_CheckedChanged);
+            // 
+            // chkOvertime
+            // 
+            this.chkOvertime.AutoSize = true;
+            this.chkOvertime.Location = new System.Drawing.Point(11, 140);
+            this.chkOvertime.Name = "chkOvertime";
+            this.chkOvertime.Size = new System.Drawing.Size(15, 14);
+            this.chkOvertime.TabIndex = 35;
+            this.chkOvertime.UseVisualStyleBackColor = true;
+            this.chkOvertime.CheckedChanged += new System.EventHandler(this.chkOvertime_CheckedChanged);
+            // 
+            // chkBonus
+            // 
+            this.chkBonus.AutoSize = true;
+            this.chkBonus.Location = new System.Drawing.Point(11, 166);
+            this.chkBonus.Name = "chkBonus";
+            this.chkBonus.Size = new System.Drawing.Size(15, 14);
+            this.chkBonus.TabIndex = 36;
+            this.chkBonus.UseVisualStyleBackColor = true;
+            this.chkBonus.CheckedChanged += new System.EventHandler(this.chkBonus_CheckedChanged);
+            // 
+            // chkUnpaid
+            // 
+            this.chkUnpaid.AutoSize = true;
+            this.chkUnpaid.Location = new System.Drawing.Point(11, 192);
+            this.chkUnpaid.Name = "chkUnpaid";
+            this.chkUnpaid.Size = new System.Drawing.Size(15, 14);
+            this.chkUnpaid.TabIndex = 37;
+            this.chkUnpaid.UseVisualStyleBackColor = true;
+            this.chkUnpaid.CheckedChanged += new System.EventHandler(this.chkUnpaid_CheckedChanged);
+            // 
+            // chkBackPay
+            // 
+            this.chkBackPay.AutoSize = true;
+            this.chkBackPay.Location = new System.Drawing.Point(11, 218);
+            this.chkBackPay.Name = "chkBackPay";
+            this.chkBackPay.Size = new System.Drawing.Size(15, 14);
+            this.chkBackPay.TabIndex = 38;
+            this.chkBackPay.UseVisualStyleBackColor = true;
+            this.chkBackPay.CheckedChanged += new System.EventHandler(this.chkBackPay_CheckedChanged);
+            // 
+            // chkHolidayPay
+            // 
+            this.chkHolidayPay.AutoSize = true;
+            this.chkHolidayPay.Location = new System.Drawing.Point(11, 244);
+            this.chkHolidayPay.Name = "chkHolidayPay";
+            this.chkHolidayPay.Size = new System.Drawing.Size(15, 14);
+            this.chkHolidayPay.TabIndex = 39;
+            this.chkHolidayPay.UseVisualStyleBackColor = true;
+            this.chkHolidayPay.CheckedChanged += new System.EventHandler(this.chkHolidayPay_CheckedChanged);
+            // 
+            // chkWorkingFromHome
+            // 
+            this.chkWorkingFromHome.AutoSize = true;
+            this.chkWorkingFromHome.Checked = true;
+            this.chkWorkingFromHome.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkWorkingFromHome.Location = new System.Drawing.Point(11, 270);
+            this.chkWorkingFromHome.Name = "chkWorkingFromHome";
+            this.chkWorkingFromHome.Size = new System.Drawing.Size(15, 14);
+            this.chkWorkingFromHome.TabIndex = 40;
+            this.chkWorkingFromHome.UseVisualStyleBackColor = true;
+            this.chkWorkingFromHome.CheckedChanged += new System.EventHandler(this.chkWorkingFromHom_CheckedChanged);
+            // 
+            // chkStudent
+            // 
+            this.chkStudent.AutoSize = true;
+            this.chkStudent.Location = new System.Drawing.Point(310, 169);
+            this.chkStudent.Name = "chkStudent";
+            this.chkStudent.Size = new System.Drawing.Size(15, 14);
+            this.chkStudent.TabIndex = 41;
+            this.chkStudent.UseVisualStyleBackColor = true;
+            this.chkStudent.CheckedChanged += new System.EventHandler(this.chkStudent_CheckedChanged);
+            // 
             // ImportPaySlipForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(491, 318);
+            this.ClientSize = new System.Drawing.Size(579, 355);
+            this.Controls.Add(this.chkStudent);
+            this.Controls.Add(this.chkWorkingFromHome);
+            this.Controls.Add(this.chkHolidayPay);
+            this.Controls.Add(this.chkBackPay);
+            this.Controls.Add(this.chkUnpaid);
+            this.Controls.Add(this.chkBonus);
+            this.Controls.Add(this.chkOvertime);
+            this.Controls.Add(this.chkSsp);
             this.Controls.Add(this.label15);
             this.Controls.Add(this.decWorkingFromHome);
             this.Controls.Add(this.label14);
@@ -424,5 +522,13 @@ namespace MoneyTracker
         private System.Windows.Forms.Label label14;
         private DecimalBoxControl decWorkingFromHome;
         private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.CheckBox chkSsp;
+        private System.Windows.Forms.CheckBox chkOvertime;
+        private System.Windows.Forms.CheckBox chkBonus;
+        private System.Windows.Forms.CheckBox chkUnpaid;
+        private System.Windows.Forms.CheckBox chkBackPay;
+        private System.Windows.Forms.CheckBox chkHolidayPay;
+        private System.Windows.Forms.CheckBox chkWorkingFromHome;
+        private System.Windows.Forms.CheckBox chkStudent;
     }
 }

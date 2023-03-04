@@ -14,7 +14,7 @@ namespace MoneyTracker
     {
         private readonly OpenFileDialog _openDialog;
         private readonly DatabaseService _databaseService;
-        
+
         private List<TransactionCategory> _categories;
 
         public int AccountId { private get; set; }
@@ -93,10 +93,6 @@ namespace MoneyTracker
             //todo: get this mapping from somewhere
             switch (AccountId)
             {
-                case 4:
-                    _openDialog.Filter = "Santander TEXT File|*.txt";
-                    break;
-
                 case 7:
                     _openDialog.Filter = "Capital One CSV file|*.csv";
                     break;
@@ -120,10 +116,6 @@ namespace MoneyTracker
             //todo: check the mapping to see which method to use
             switch (AccountId)
             {
-                case 4:
-                    LoadDataFromSantander(_openDialog.FileName);
-                    break;
-
                 case 7:
                     LoadDataFromCapitalOne(_openDialog.FileName);
                     break;
@@ -147,20 +139,6 @@ namespace MoneyTracker
             }
 
             grdDataView.Rows[0].Selected = true;
-        }
-
-        private void LoadDataFromSantander(string filePath)
-        {
-            List<Transaction> transactions = null;
-            Task.Run(() => transactions = Core.Helpers.ParseHelper.LoadDataFromSantander(filePath)).Wait();
-            foreach (var record in transactions)
-            {
-                var rowNum = grdDataView.Rows.Add();
-                grdDataView.Rows[rowNum].Cells["Date"].Value = record.Date;
-                grdDataView.Rows[rowNum].Cells["Description"].Value = record.Description;
-                grdDataView.Rows[rowNum].Cells["Value"].Value = record.Value;
-                grdDataView.Rows[rowNum].Cells["Balance"].Value = record.Balance;
-            }
         }
 
         private void LoadDataFromCapitalOne(string filePath)
@@ -344,18 +322,16 @@ namespace MoneyTracker
             {
                 return dataValue.Equals(matchValue);
             }
-            else
+
+            if (matchPattern.StartsWith("*"))
             {
-                if (matchPattern.StartsWith("*"))
+                if (matchPattern.EndsWith("*"))
                 {
-                    if (matchPattern.EndsWith("*"))
-                    {
-                        return dataValue.Contains(matchValue);
-                    }
-                    return dataValue.EndsWith(matchValue);
+                    return dataValue.Contains(matchValue);
                 }
-                return dataValue.StartsWith(matchValue);
+                return dataValue.EndsWith(matchValue);
             }
+            return dataValue.StartsWith(matchValue);
         }
 
         private DataGridViewComboBoxCell GetTransTypeCombo()
@@ -383,7 +359,7 @@ namespace MoneyTracker
             _categories = _databaseService.GetTransactionCategories().Where(c => !c.Obsolete).ToList();
 
             list.AddRange(_categories.OrderBy(c => c.Description));
-            
+
             return new DataGridViewComboBoxCell
             {
                 DataSource = list,

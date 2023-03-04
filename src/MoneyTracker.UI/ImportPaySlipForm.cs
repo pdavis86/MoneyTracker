@@ -108,6 +108,44 @@ namespace MoneyTracker
             }
         }
 
+        private void chkSsp_CheckedChanged(object sender, EventArgs e)
+        {
+            decSsp.Enabled = chkSsp.Checked;
+        }
 
+        private void chkOvertime_CheckedChanged(object sender, EventArgs e)
+        {
+            decOvertime.Enabled = chkOvertime.Checked;
+        }
+
+        private void chkBonus_CheckedChanged(object sender, EventArgs e)
+        {
+            decBonus.Enabled = chkBonus.Checked;
+        }
+
+        private void chkUnpaid_CheckedChanged(object sender, EventArgs e)
+        {
+            decUnpaid.Enabled = chkUnpaid.Checked;
+        }
+
+        private void chkBackPay_CheckedChanged(object sender, EventArgs e)
+        {
+            decBackPay.Enabled = chkBackPay.Checked;
+        }
+
+        private void chkHolidayPay_CheckedChanged(object sender, EventArgs e)
+        {
+            decHolidayPay.Enabled = chkHolidayPay.Checked;
+        }
+
+        private void chkWorkingFromHom_CheckedChanged(object sender, EventArgs e)
+        {
+            decWorkingFromHome.Enabled = chkWorkingFromHome.Checked;
+        }
+
+        private void chkStudent_CheckedChanged(object sender, EventArgs e)
+        {
+            decStudent.Enabled = chkStudent.Checked;
+        }
     }
 }
