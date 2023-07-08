@@ -1,19 +1,22 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using System;
 using System.Windows.Forms;
 
 namespace MoneyTracker
 {
     static class Program
     {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            var builder = Host.CreateDefaultBuilder(args);
+            
+            var host = builder.Build();
+
+            ApplicationConfiguration.Initialize();
+            Application.Run(new MainForm(host.Services.GetRequiredService<IConfiguration>()));
         }
     }
 }

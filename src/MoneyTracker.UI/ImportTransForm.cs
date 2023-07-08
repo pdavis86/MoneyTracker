@@ -19,11 +19,12 @@ namespace MoneyTracker
 
         public int AccountId { private get; set; }
 
-        public ImportTransForm()
+        public ImportTransForm(DatabaseService databaseService)
         {
             InitializeComponent();
 
-            _databaseService = Core.Factories.DatabaseServiceFactory.GetNewDatabaseService();
+            _databaseService = databaseService;
+
             _openDialog = new OpenFileDialog();
         }
 
@@ -179,15 +180,15 @@ namespace MoneyTracker
 
             switch (record.SpendingCategory)
             {
-                case "BILLS_AND_SERVICES": searchStr = "bills"; break;
+                //Misleading - case "BILLS_AND_SERVICES": searchStr = "bills"; break;
                 case "EATING_OUT": searchStr = "eating out"; break;
                 case "ENTERTAINMENT": searchStr = "entertainment"; break;
                 case "GENERAL": searchStr = "all other"; break;
                 case "GROCERIES": searchStr = "supermarket"; break;
                 case "HOME": searchStr = "diy"; break;
-                case "INCOME": searchStr = "salary"; break;
+                case "INCOME": searchStr = "internal transfer"; break;
                 //case "LIFESTYLE":
-                case "PAYMENTS": searchStr = "loan payment"; break;
+                //Misleading - case "PAYMENTS": searchStr = "loan payment"; break;
                 case "PETS": searchStr = "pets"; break;
                 case "SHOPPING": searchStr = "high street"; break;
                 default: return;

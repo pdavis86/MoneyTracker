@@ -10,11 +10,11 @@ namespace MoneyTracker
     {
         private readonly DatabaseService _databaseService;
 
-        public ImportPaySlipForm()
+        public ImportPaySlipForm(DatabaseService databaseService)
         {
             InitializeComponent();
 
-            _databaseService = Core.Factories.DatabaseServiceFactory.GetNewDatabaseService();
+            _databaseService = databaseService;
         }
 
         private void ImportPaySlipForm_Shown(object sender, EventArgs e)

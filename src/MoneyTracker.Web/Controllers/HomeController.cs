@@ -1,12 +1,21 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using MoneyTracker.Core.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
 
 namespace MoneyTracker.Web.Controllers
 {
     public class HomeController : Controller
     {
+        private DatabaseService _databaseService;
+
+        public HomeController(IConfiguration configuration)
+        {
+            _databaseService = new DatabaseService(configuration.GetConnectionString("MoneyTrackerDatabase"));
+        }
+
         public ActionResult Index()
         {
             return View("/Views/Home.cshtml");
@@ -14,12 +23,11 @@ namespace MoneyTracker.Web.Controllers
 
         public ActionResult GetData()
         {
-            var db = Core.Factories.DatabaseServiceFactory.GetNewDatabaseService();
-            var data = db.GetTransactionsBetween(DateTime.Now.AddMonths(-12), DateTime.Now);
+            var data = _databaseService.GetTransactionsBetween(DateTime.Now.AddMonths(-12), DateTime.Now);
 
             //todo: don't include this month
 
-            var categories = db.GetTransactionCategories();
+            var categories = _databaseService.GetTransactionCategories();
 
             var dateGrouping = data
                 //.GroupBy(r => r.Date.ToShortDateString())
@@ -66,18 +74,14 @@ namespace MoneyTracker.Web.Controllers
                     )
             });
 
-            return new JsonResult()
+            return Json(new ViewModels.Chart
             {
-                Data = new ViewModels.Chart
-                {
-                    Type = "line",
-                    Title = "Spending by category",
-                    YAxisTitle = "Amount Spent",
-                    XAxisCategories = dateGrouping.Select(g => g.Key),
-                    Series = seriesList
-                },
-                JsonRequestBehavior = JsonRequestBehavior.AllowGet
-            };
+                Type = "line",
+                Title = "Spending by category",
+                YAxisTitle = "Amount Spent",
+                XAxisCategories = dateGrouping.Select(g => g.Key),
+                Series = seriesList
+            });
 
             //return new JsonResult()
             //{

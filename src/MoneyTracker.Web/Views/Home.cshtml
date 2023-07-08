@@ -24,26 +24,26 @@
 
                 pd.Chart = Highcharts.chart('container', {
                     chart: {
-                        type: chartData.Type
+                        type: chartData.type
                     },
                     title: {
-                        text: chartData.Title
+                        text: chartData.title
                     },
                     xAxis: {
-                        categories: chartData.XAxisCategories
+                        categories: chartData.xAxisCategories
                     },
                     yAxis: {
                         title: {
-                            text: chartData.YAxisTitle
+                            text: chartData.yAxisTitle
                         }
                     },
                     series: []
                 });
 
-                Array.prototype.forEach.call(chartData.Series, function (e) {
+                Array.prototype.forEach.call(chartData.series, function (e) {
                     pd.Chart.addSeries({
-                        name: e.Title,
-                        data: e.Data
+                        name: e.title,
+                        data: e.data
                     });
                 });
 

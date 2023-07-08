@@ -1,4 +1,5 @@
-﻿using MoneyTracker.Core.Services;
+﻿using Microsoft.Extensions.Configuration;
+using MoneyTracker.Core.Services;
 using System;
 using System.Linq;
 using System.Windows.Forms;
@@ -10,11 +11,11 @@ namespace MoneyTracker
         private readonly DatabaseService _databaseService;
         private bool _formLoaded;
 
-        public MainForm()
+        public MainForm(IConfiguration configuration)
         {
             InitializeComponent();
 
-            _databaseService = Core.Factories.DatabaseServiceFactory.GetNewDatabaseService();
+            _databaseService = new DatabaseService(configuration.GetConnectionString("MoneyTrackerDatabase"));
         }
 
         private void MainForm_Shown(object sender, EventArgs e)
@@ -38,7 +39,7 @@ namespace MoneyTracker
 
         private void btnImportTrans_Click(object sender, EventArgs e)
         {
-            var form = new ImportTransForm
+            var form = new ImportTransForm(_databaseService)
             {
                 AccountId = (int)cboAccounts.SelectedValue
             };
@@ -48,7 +49,7 @@ namespace MoneyTracker
 
         private void btnImportSalary_Click(object sender, EventArgs e)
         {
-            var form = new ImportPaySlipForm();
+            var form = new ImportPaySlipForm(_databaseService);
             form.ShowDialog(this);
             GetMaxDates();
         }

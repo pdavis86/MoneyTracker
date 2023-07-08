@@ -24,7 +24,7 @@ namespace MoneyTracker.Core.Helpers
             var transactions = new List<FirstDirectTransaction>();
 
             using (var reader = new StreamReader(filePath))
-            using (var csv = new CsvReader(reader))
+            using (var csv = new CsvReader(reader, CultureInfo.CurrentCulture))
             {
                 csv.Read();
                 csv.ReadHeader();
@@ -92,7 +92,7 @@ namespace MoneyTracker.Core.Helpers
         public static List<T> LoadData<T>(string filePath)
         {
             using (var streamReader = new StreamReader(filePath))
-            using (var csv = new CsvReader(streamReader))
+            using (var csv = new CsvReader(streamReader, CultureInfo.CurrentCulture))
             {
                 return csv.GetRecords<T>().ToList();
             }
