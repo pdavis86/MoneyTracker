@@ -1,4 +1,5 @@
 ﻿using MoneyTracker.Core.Services;
+using MoneyTracker.Data.Entities;
 using System;
 using System.Linq;
 using System.Windows.Forms;
@@ -39,7 +40,20 @@ namespace MoneyTracker
 
         private bool WriteToDatabase()
         {
-            var paySlip = new Data.Entities.PaySlip
+            var paySlip = BuildPaySlipEntity();
+
+            if (!IsInputValid(paySlip))
+            {
+                MessageBox.Show("Check the data", "Something is wrong with the data", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            return _databaseService.WritePaySlip(paySlip);
+        }
+
+        private PaySlip BuildPaySlipEntity()
+        {
+            return new PaySlip
             {
                 EmployerId = (int)cboEmployers.SelectedValue,
                 Date = dtpDate.Value,
@@ -50,40 +64,39 @@ namespace MoneyTracker
                 UnpaidPay = decUnpaid.Value,
                 BackPay = decBackPay.Value,
                 HolidayPay = decHolidayPay.Value,
+                WorkingFromHome = decWorkingFromHome.Value,
                 Tax = decTax.ValueDecimal,
                 NationalInsurance = decNi.ValueDecimal,
                 Pension = decPension.Value,
                 StudentLoan = decStudent.Value,
                 Net = decNet.ValueDecimal
             };
-            return _databaseService.WritePaySlip(paySlip);
         }
 
         private void decNet_TextChanged(object sender, EventArgs e)
         {
-            //Validate on changing any of the text boxes
-            ValidateInput();
+            btnImport.Enabled = IsInputValid(BuildPaySlipEntity());
         }
 
-        private void ValidateInput()
+        private bool IsInputValid(PaySlip paySlip)
         {
-            decimal payments = decBasic.ValueDecimal
-                + decSsp.ValueDecimal
-                + decOvertime.ValueDecimal
-                + decBonus.ValueDecimal
-                + decUnpaid.ValueDecimal
-                + decBackPay.ValueDecimal
-                + decHolidayPay.ValueDecimal
-                + decWorkingFromHome.ValueDecimal;
+            var payments = paySlip.Basic
+                + (paySlip.SspSmpSpp ?? 0)
+                + (paySlip.Overtime ?? 0)
+                + (paySlip.Bonus ?? 0)
+                + (paySlip.UnpaidPay ?? 0)
+                + (paySlip.BackPay ?? 0)
+                + (paySlip.HolidayPay ?? 0)
+                + (paySlip.WorkingFromHome ?? 0);
 
-            decimal deductions = decTax.ValueDecimal
-                + decNi.ValueDecimal
-                + decPension.ValueDecimal
-                + decStudent.ValueDecimal;
+            var deductions = paySlip.Tax
+                + paySlip.NationalInsurance
+                + paySlip.Pension
+                + (paySlip.StudentLoan ?? 0);
 
-            decimal netCalcd = payments - deductions;
+            var netCalcd = payments - deductions;
 
-            btnImport.Enabled = decNet.Value == netCalcd;
+            return decNet.Value == netCalcd;
         }
 
         private void dtpDate_Leave(object sender, EventArgs e)

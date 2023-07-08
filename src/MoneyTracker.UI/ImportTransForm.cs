@@ -128,6 +128,10 @@ namespace MoneyTracker
                     LoadDataFromFirstDirect(_openDialog.FileName);
                     break;
 
+                case 10:
+                    LoadDataFromAmex(_openDialog.FileName);
+                    break;
+
                 default:
                     throw new Exception("Unexpected filter index");
             }
@@ -210,6 +214,19 @@ namespace MoneyTracker
                 grdDataView.Rows[rowNum].Cells["Description"].Value = record.Description;
                 grdDataView.Rows[rowNum].Cells["Value"].Value = record.Amount;
                 grdDataView.Rows[rowNum].Cells["Balance"].Value = record.Balance;
+            }
+        }
+
+        private void LoadDataFromAmex(string filePath)
+        {
+            IEnumerable<Core.Models.AmexTransaction> transactions = null;
+            Task.Run(() => transactions = Core.Helpers.ParseHelper.LoadData<Core.Models.AmexTransaction>(filePath)).Wait();
+            foreach (var record in transactions.Reverse())
+            {
+                var rowNum = grdDataView.Rows.Add();
+                grdDataView.Rows[rowNum].Cells["Date"].Value = record.Date;
+                grdDataView.Rows[rowNum].Cells["Description"].Value = record.Description;
+                grdDataView.Rows[rowNum].Cells["Value"].Value = record.Amount * -1;
             }
         }
 

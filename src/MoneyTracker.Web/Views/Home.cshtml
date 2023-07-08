@@ -1,5 +1,7 @@
 ﻿@{
     //Layout = "_Layout.cshtml";
+
+    var actionName = nameof(MoneyTracker.Web.Controllers.HomeController.GetData);
 }
 
 @*height:400px;*@
@@ -14,7 +16,7 @@
 
         var request = new XMLHttpRequest();
 
-        request.open('GET', '@Url.Action(nameof(MoneyTracker.Web.Controllers.HomeController.GetData), new { @cachebust = DateTime.UtcNow.ToString("u") })', true);
+        request.open('GET', '@Url.Action(actionName, new { cachebust = DateTime.UtcNow.ToString("u") })', true);
 
         request.onload = function () {
             if (this.status >= 200 && this.status < 400) {

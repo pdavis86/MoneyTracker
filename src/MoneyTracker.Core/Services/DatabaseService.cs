@@ -59,7 +59,7 @@ namespace MoneyTracker.Core.Services
         {
             using (var db = new Context(_connStr))
             {
-                foreach (Transaction trans in transData)
+                foreach (var trans in transData)
                 {
                     db.Transactions.Add(trans);
                 }
