@@ -99,11 +99,20 @@ namespace MoneyTracker
                     break;
 
                 case 8:
+                case 11:
                     _openDialog.Filter = "Starling Bank CSV file|*.csv";
                     break;
 
                 case 9:
                     _openDialog.Filter = "First Direct CSV file|*.csv";
+                    break;
+
+                case 10:
+                    _openDialog.Filter = "AMEX CSV file|*.csv";
+                    break;
+
+                case 12:
+                    _openDialog.Filter = "Virgin Credit Card CSV file|*.csv";
                     break;
             }
 
@@ -122,6 +131,7 @@ namespace MoneyTracker
                     break;
 
                 case 8:
+                case 11:
                     LoadDataFromStarlingBank(_openDialog.FileName);
                     break;
 
@@ -131,6 +141,10 @@ namespace MoneyTracker
 
                 case 10:
                     LoadDataFromAmex(_openDialog.FileName);
+                    break;
+
+                case 12:
+                    LoadDataFromVirginCreditCard(_openDialog.FileName);
                     break;
 
                 default:
@@ -171,6 +185,19 @@ namespace MoneyTracker
                 grdDataView.Rows[rowNum].Cells["Value"].Value = record.Amount;
                 grdDataView.Rows[rowNum].Cells["Balance"].Value = record.Balance;
                 GetCategoryFromStarlingBank(rowNum, record);
+            }
+        }
+
+        private void LoadDataFromVirginCreditCard(string filePath)
+        {
+            IEnumerable<Core.Models.VirginTransaction> transactions = null;
+            Task.Run(() => transactions = Core.Helpers.ParseHelper.LoadData<Core.Models.VirginTransaction>(filePath)).Wait();
+            foreach (var record in transactions)
+            {
+                var rowNum = grdDataView.Rows.Add();
+                grdDataView.Rows[rowNum].Cells["Date"].Value = record.TransactionDate;
+                grdDataView.Rows[rowNum].Cells["Description"].Value = record.Merchant;
+                grdDataView.Rows[rowNum].Cells["Value"].Value = record.Amount;
             }
         }
 
