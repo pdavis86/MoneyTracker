@@ -23,14 +23,12 @@ namespace MoneyTracker.Web.Controllers
 
         public ActionResult GetData()
         {
-            var data = _databaseService.GetTransactionsBetween(DateTime.Now.AddMonths(-12), DateTime.Now);
-
-            //todo: don't include this month
+            var endDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            var data = _databaseService.GetTransactionsBetween(DateTime.Now.AddMonths(-12), endDate);
 
             var categories = _databaseService.GetTransactionCategories();
 
             var dateGrouping = data
-                //.GroupBy(r => r.Date.ToShortDateString())
                 .GroupBy(r => r.Date.ToString("yyyy-MM"))
                 .OrderBy(g => g.Key);
 
@@ -38,14 +36,18 @@ namespace MoneyTracker.Web.Controllers
 
             foreach (var category in categories)
             {
-                seriesList.Add(new ViewModels.Series
-                {
-                    Title = category.Description,
-                    Data = dateGrouping.Select(g => g
+                var categoryData = dateGrouping.Select(g => g
                         .Where(r => r.CategoryId == category.CategoryId)
-                        .Sum(r => r.Value * -1)
-                    )
-                });
+                        .Sum(r => r.Value * -1));
+
+                if (categoryData.Any())
+                {
+                    seriesList.Add(new ViewModels.Series
+                    {
+                        Title = category.Description,
+                        Data = categoryData
+                    });
+                }
             }
 
             seriesList.Add(new ViewModels.Series

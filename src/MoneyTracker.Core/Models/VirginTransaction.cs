@@ -5,6 +5,12 @@ namespace MoneyTracker.Core.Models
 {
     public class VirginTransaction
     {
+        public static class DebitCreditCodes
+        {
+            public const string Debit = "DBIT";
+            public const string Credit = "CRDT";
+        }
+
         [Name("Transaction Date")]
         public DateTime TransactionDate { get; set; }
 
