@@ -4,6 +4,7 @@ using System.Windows.Forms;
 
 namespace MoneyTracker.CustomControls
 {
+    [System.Runtime.Versioning.SupportedOSPlatform("windows")]
     public partial class DecimalBoxControl : TextBox
     {
         public DecimalBoxControl()

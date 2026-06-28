@@ -6,6 +6,7 @@ using System.Windows.Forms;
 
 namespace MoneyTracker
 {
+    [System.Runtime.Versioning.SupportedOSPlatform("windows")]
     static class Program
     {
         [STAThread]

@@ -8,7 +8,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="EntityFramework" Version="6.4.4" />
+    <PackageReference Include="EntityFramework" Version="6.5.1" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Migrations\201702121354129_noNeedForCategories.Designer.cs">

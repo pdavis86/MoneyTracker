@@ -6,6 +6,7 @@ using System.Windows.Forms;
 
 namespace MoneyTracker
 {
+    [System.Runtime.Versioning.SupportedOSPlatform("windows")]
     public partial class MainForm : Form
     {
         private readonly DatabaseService _databaseService;

@@ -10,6 +10,7 @@ using System.Windows.Forms;
 
 namespace MoneyTracker
 {
+    [System.Runtime.Versioning.SupportedOSPlatform("windows")]
     public partial class ImportTransForm : Form
     {
         private readonly OpenFileDialog _openDialog;
@@ -17,7 +18,9 @@ namespace MoneyTracker
 
         private List<TransactionCategory> _categories;
 
+#pragma warning disable WFO1000 // Missing code serialization configuration for property content
         public int AccountId { private get; set; }
+#pragma warning restore WFO1000 // Missing code serialization configuration for property content
 
         public ImportTransForm(DatabaseService databaseService)
         {
