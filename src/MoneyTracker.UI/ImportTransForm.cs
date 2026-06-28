@@ -1,12 +1,14 @@
-﻿using MoneyTracker.Core.Extensions;
-using MoneyTracker.Core.Services;
-using MoneyTracker.Data.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
+using MoneyTracker.Core.Extensions;
+using MoneyTracker.Core.Services;
+using MoneyTracker.Data.Entities;
 
 namespace MoneyTracker
 {
@@ -16,6 +18,7 @@ namespace MoneyTracker
         private readonly OpenFileDialog _openDialog;
         private readonly DatabaseService _databaseService;
 
+        private List<TransactionType> _transactionTypes;
         private List<TransactionCategory> _categories;
 
 #pragma warning disable WFO1000 // Missing code serialization configuration for property content
@@ -331,6 +334,8 @@ namespace MoneyTracker
             {
                 grdDataView.Columns["CategoryId"].DisplayIndex = 7;
             }
+
+            grdDataView.Columns.Add("PatternMatch", "Matched with...");
         }
 
         private void AutoAssignValues()
@@ -344,16 +349,40 @@ namespace MoneyTracker
                     {
                         if (autoAlloc.UpdateColumnName == "CategoryId")
                         {
-                            grdDataView.Rows[row].Cells["CategoryId"].Value = int.Parse(autoAlloc.UpdateDataValue);
+                            var desiredCategoryId = int.Parse(autoAlloc.UpdateDataValue);
+                            if (_categories.Any(c => c.CategoryId == desiredCategoryId))
+                            {
+                                grdDataView.Rows[row].Cells["CategoryId"].Value = desiredCategoryId;
+                            }
+                            else
+                            {
+                                // todo: Deal with invalid values
+                                Console.WriteLine("No longer valid");
+                                continue;
+                            }
                         }
                         else if (autoAlloc.UpdateColumnName == "TypeId")
                         {
-                            grdDataView.Rows[row].Cells["TypeId"].Value = int.Parse(autoAlloc.UpdateDataValue);
+                            var desiredTypeId = int.Parse(autoAlloc.UpdateDataValue);
+                            if (_transactionTypes.Any(t => t.TypeId == desiredTypeId))
+                            {
+                                grdDataView.Rows[row].Cells["TypeId"].Value = desiredTypeId;
+                            }
+                            else
+                            {
+                                // todo: Deal with invalid values
+                                Console.WriteLine("No longer valid");
+                                continue;
+                            }
                         }
                         else
                         {
                             grdDataView.Rows[row].Cells[autoAlloc.UpdateColumnName].Value = autoAlloc.UpdateDataValue;
                         }
+
+                        grdDataView.Rows[row].Cells["PatternMatch"].Value = autoAlloc.GridDataPattern;
+
+                        // todo: update autoAlloc last usage timestamp
                     }
                 }
             }
@@ -386,7 +415,11 @@ namespace MoneyTracker
             {
                 new TransactionType()
             };
-            list.AddRange(_databaseService.GetTransactionTypes());
+
+            _transactionTypes = _databaseService.GetTransactionTypes();
+
+            list.AddRange(_transactionTypes);
+
             return new DataGridViewComboBoxCell
             {
                 DataSource = list,
@@ -410,7 +443,7 @@ namespace MoneyTracker
             {
                 DataSource = list,
                 DisplayMember = "Description",
-                ValueMember = "CategoryId"
+                ValueMember = "CategoryId",
             };
         }
 
@@ -423,16 +456,7 @@ namespace MoneyTracker
                 int? categId = row.Cells["CategoryId"].Value != null ? int.Parse(row.Cells["CategoryId"].Value.ToString()) : (int?)null;
                 if (transId == null)
                 {
-                    transData.Add(new Transaction
-                    {
-                        AccountId = AccountId,
-                        CategoryId = categId,
-                        TypeId = row.Cells["TypeId"].Value != null ? int.Parse(row.Cells["TypeId"].Value.ToString()) : (int?)null,
-                        Date = DateTime.Parse(row.Cells["Date"].Value.ToString()),
-                        Description = row.Cells["Description"].Value.ToString(),
-                        Value = decimal.Parse(row.Cells["Value"].Value.ToString()),
-                        Balance = row.Cells["Balance"].Value != null ? decimal.Parse(row.Cells["Balance"].Value.ToString()) : (decimal?)null
-                    });
+                    transData.Add(GetTransactionFromRow(row));
                 }
                 else
                 {
@@ -443,6 +467,22 @@ namespace MoneyTracker
                 }
             }
             return _databaseService.WriteTransactions(transData);
+        }
+
+        private Transaction GetTransactionFromRow(DataGridViewRow row)
+        {
+            int? categId = row.Cells["CategoryId"].Value != null ? int.Parse(row.Cells["CategoryId"].Value.ToString()) : (int?)null;
+
+            return new Transaction
+            {
+                AccountId = AccountId,
+                CategoryId = categId,
+                TypeId = row.Cells["TypeId"].Value != null ? int.Parse(row.Cells["TypeId"].Value.ToString()) : (int?)null,
+                Date = DateTime.Parse(row.Cells["Date"].Value.ToString()),
+                Description = row.Cells["Description"].Value.ToString(),
+                Value = decimal.Parse(row.Cells["Value"].Value.ToString()),
+                Balance = row.Cells["Balance"].Value != null ? decimal.Parse(row.Cells["Balance"].Value.ToString()) : (decimal?)null
+            };
         }
 
         private void LoadTransactionsNeedingAttention()
@@ -459,5 +499,30 @@ namespace MoneyTracker
             }
         }
 
+        private void grdDataView_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0
+                || e.ColumnIndex < 0
+                || grdDataView.Columns[e.ColumnIndex].Name != "PatternMatch")
+            {
+                return;
+            }
+
+            var value = grdDataView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+
+            if (value == null)
+            {
+                var form = new CreateRuleForm(_databaseService)
+                {
+                    TransactionData = GetTransactionFromRow(grdDataView.Rows[e.RowIndex])
+                };
+                form.ShowDialog(this);
+            }
+        }
+
+        private void grdDataView_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            Console.WriteLine(e);
+        }
     }
 }

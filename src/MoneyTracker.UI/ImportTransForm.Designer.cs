@@ -28,108 +28,112 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.grdDataView = new System.Windows.Forms.DataGridView();
-            this.btnFindFile = new System.Windows.Forms.Button();
-            this.txtImportFile = new System.Windows.Forms.TextBox();
-            this.btnImport = new System.Windows.Forms.Button();
-            this.btnLoad = new System.Windows.Forms.Button();
-            this.btnInsert = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.grdDataView)).BeginInit();
-            this.SuspendLayout();
+            grdDataView = new System.Windows.Forms.DataGridView();
+            btnFindFile = new System.Windows.Forms.Button();
+            txtImportFile = new System.Windows.Forms.TextBox();
+            btnImport = new System.Windows.Forms.Button();
+            btnLoad = new System.Windows.Forms.Button();
+            btnInsert = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)grdDataView).BeginInit();
+            SuspendLayout();
             // 
             // grdDataView
             // 
-            this.grdDataView.AllowUserToAddRows = false;
-            this.grdDataView.AllowUserToOrderColumns = true;
-            this.grdDataView.AllowUserToResizeRows = false;
-            this.grdDataView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.grdDataView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
-            this.grdDataView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.grdDataView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
-            this.grdDataView.Location = new System.Drawing.Point(12, 35);
-            this.grdDataView.MultiSelect = false;
-            this.grdDataView.Name = "grdDataView";
-            this.grdDataView.RowTemplate.Height = 24;
-            this.grdDataView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.grdDataView.Size = new System.Drawing.Size(812, 376);
-            this.grdDataView.TabIndex = 8;
+            grdDataView.AllowUserToAddRows = false;
+            grdDataView.AllowUserToOrderColumns = true;
+            grdDataView.AllowUserToResizeRows = false;
+            grdDataView.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            grdDataView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
+            grdDataView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            grdDataView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
+            grdDataView.Location = new System.Drawing.Point(14, 40);
+            grdDataView.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            grdDataView.MultiSelect = false;
+            grdDataView.Name = "grdDataView";
+            grdDataView.RowTemplate.Height = 24;
+            grdDataView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            grdDataView.Size = new System.Drawing.Size(947, 434);
+            grdDataView.TabIndex = 8;
+            grdDataView.CellClick += grdDataView_CellClick;
+            grdDataView.DataError += grdDataView_DataError;
             // 
             // btnFindFile
             // 
-            this.btnFindFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnFindFile.Location = new System.Drawing.Point(800, 11);
-            this.btnFindFile.Margin = new System.Windows.Forms.Padding(2);
-            this.btnFindFile.Name = "btnFindFile";
-            this.btnFindFile.Size = new System.Drawing.Size(25, 19);
-            this.btnFindFile.TabIndex = 7;
-            this.btnFindFile.Text = "...";
-            this.btnFindFile.UseVisualStyleBackColor = true;
-            this.btnFindFile.Click += new System.EventHandler(this.btnFindFile_Click);
+            btnFindFile.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            btnFindFile.Location = new System.Drawing.Point(933, 13);
+            btnFindFile.Margin = new System.Windows.Forms.Padding(2);
+            btnFindFile.Name = "btnFindFile";
+            btnFindFile.Size = new System.Drawing.Size(29, 22);
+            btnFindFile.TabIndex = 7;
+            btnFindFile.Text = "...";
+            btnFindFile.UseVisualStyleBackColor = true;
+            btnFindFile.Click += btnFindFile_Click;
             // 
             // txtImportFile
             // 
-            this.txtImportFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtImportFile.Location = new System.Drawing.Point(11, 11);
-            this.txtImportFile.Margin = new System.Windows.Forms.Padding(2);
-            this.txtImportFile.Name = "txtImportFile";
-            this.txtImportFile.ReadOnly = true;
-            this.txtImportFile.Size = new System.Drawing.Size(785, 20);
-            this.txtImportFile.TabIndex = 6;
-            this.txtImportFile.TabStop = false;
+            txtImportFile.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            txtImportFile.Location = new System.Drawing.Point(13, 13);
+            txtImportFile.Margin = new System.Windows.Forms.Padding(2);
+            txtImportFile.Name = "txtImportFile";
+            txtImportFile.ReadOnly = true;
+            txtImportFile.Size = new System.Drawing.Size(915, 23);
+            txtImportFile.TabIndex = 6;
+            txtImportFile.TabStop = false;
             // 
             // btnImport
             // 
-            this.btnImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnImport.Location = new System.Drawing.Point(749, 417);
-            this.btnImport.Name = "btnImport";
-            this.btnImport.Size = new System.Drawing.Size(75, 23);
-            this.btnImport.TabIndex = 9;
-            this.btnImport.Text = "&Save";
-            this.btnImport.UseVisualStyleBackColor = true;
-            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
+            btnImport.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+            btnImport.Location = new System.Drawing.Point(874, 481);
+            btnImport.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            btnImport.Name = "btnImport";
+            btnImport.Size = new System.Drawing.Size(88, 27);
+            btnImport.TabIndex = 9;
+            btnImport.Text = "&Save";
+            btnImport.UseVisualStyleBackColor = true;
+            btnImport.Click += btnImport_Click;
             // 
             // btnLoad
             // 
-            this.btnLoad.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnLoad.Location = new System.Drawing.Point(12, 417);
-            this.btnLoad.Name = "btnLoad";
-            this.btnLoad.Size = new System.Drawing.Size(208, 23);
-            this.btnLoad.TabIndex = 11;
-            this.btnLoad.Text = "GetTransactionsNeedingAttention";
-            this.btnLoad.UseVisualStyleBackColor = true;
-            this.btnLoad.Click += new System.EventHandler(this.cbLoad_Click);
+            btnLoad.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+            btnLoad.Location = new System.Drawing.Point(14, 481);
+            btnLoad.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            btnLoad.Name = "btnLoad";
+            btnLoad.Size = new System.Drawing.Size(243, 27);
+            btnLoad.TabIndex = 11;
+            btnLoad.Text = "GetTransactionsNeedingAttention";
+            btnLoad.UseVisualStyleBackColor = true;
+            btnLoad.Click += cbLoad_Click;
             // 
             // btnInsert
             // 
-            this.btnInsert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnInsert.Location = new System.Drawing.Point(226, 417);
-            this.btnInsert.Name = "btnInsert";
-            this.btnInsert.Size = new System.Drawing.Size(75, 23);
-            this.btnInsert.TabIndex = 12;
-            this.btnInsert.Text = "&New row";
-            this.btnInsert.UseVisualStyleBackColor = true;
-            this.btnInsert.Click += new System.EventHandler(this.btnInsert_Click);
+            btnInsert.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+            btnInsert.Location = new System.Drawing.Point(264, 481);
+            btnInsert.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            btnInsert.Name = "btnInsert";
+            btnInsert.Size = new System.Drawing.Size(88, 27);
+            btnInsert.TabIndex = 12;
+            btnInsert.Text = "&New row";
+            btnInsert.UseVisualStyleBackColor = true;
+            btnInsert.Click += btnInsert_Click;
             // 
             // ImportTransForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(836, 452);
-            this.Controls.Add(this.btnInsert);
-            this.Controls.Add(this.btnLoad);
-            this.Controls.Add(this.btnImport);
-            this.Controls.Add(this.grdDataView);
-            this.Controls.Add(this.btnFindFile);
-            this.Controls.Add(this.txtImportFile);
-            this.Name = "ImportTransForm";
-            this.Text = "Transactions";
-            this.Shown += new System.EventHandler(this.ImportTransForm_Shown);
-            ((System.ComponentModel.ISupportInitialize)(this.grdDataView)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(975, 522);
+            Controls.Add(btnInsert);
+            Controls.Add(btnLoad);
+            Controls.Add(btnImport);
+            Controls.Add(grdDataView);
+            Controls.Add(btnFindFile);
+            Controls.Add(txtImportFile);
+            Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Name = "ImportTransForm";
+            Text = "Transactions";
+            Shown += ImportTransForm_Shown;
+            ((System.ComponentModel.ISupportInitialize)grdDataView).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 

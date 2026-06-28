@@ -77,6 +77,15 @@ namespace MoneyTracker.Core.Services
             }
         }
 
+        public bool WriteAutoAllocation(AutoAllocation autoAllocation)
+        {
+            using (var db = new Context(_connStr))
+            {
+                db.AutoAllocations.Add(autoAllocation);
+                return SaveChangesSafely(db);
+            }
+        }
+
         private bool SaveChangesSafely(Context db)
         {
             try
