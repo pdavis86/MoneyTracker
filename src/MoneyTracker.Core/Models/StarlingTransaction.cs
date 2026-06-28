@@ -31,10 +31,12 @@ namespace MoneyTracker.Core.Models
 
         public string GetDesc()
         {
-            var spacePos = CounterParty.IndexOf(" ");
-            var firstWord = spacePos == -1 ? CounterParty : CounterParty.Substring(0, spacePos - 1);
+            var spacePos = CounterParty?.IndexOf(" ") ?? -1;
+            var firstWord = spacePos < 1 ? CounterParty?.Trim() : CounterParty.Substring(0, spacePos);
 
-            return Reference.ToLower().Contains(firstWord.ToLower())
+            return firstWord != null 
+                && Reference != null 
+                && (Reference.ToLower() ?? string.Empty).Contains(firstWord.ToLower())
                 ? Reference
                 : CounterParty + ", " + Reference;
         }

@@ -1,8 +1,10 @@
-﻿using MoneyTracker.Core.Services;
-using MoneyTracker.Data.Entities;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+
+using MoneyTracker.Core.Services;
+using MoneyTracker.Data.Entities;
 
 namespace MoneyTracker
 {
@@ -20,10 +22,17 @@ namespace MoneyTracker
 
         private void ImportPaySlipForm_Shown(object sender, EventArgs e)
         {
-            cboEmployers.DataSource = _databaseService.GetEmployers().Where(x => !x.Obsolete).ToList();
+            var employers = _databaseService.GetEmployers()?.Where(x => !x.Obsolete).ToList()
+                ?? new List<Employer>();
+
+            cboEmployers.DataSource = employers;
             cboEmployers.DisplayMember = "Description";
             cboEmployers.ValueMember = "EmployerId";
-            cboEmployers.SelectedIndex = cboEmployers.Items.Count - 1;
+
+            if (cboEmployers.Items.Count > 0)
+            {
+                cboEmployers.SelectedIndex = cboEmployers.Items.Count - 1;
+            }
 
             dtpDate.Value = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddDays(-1);
 

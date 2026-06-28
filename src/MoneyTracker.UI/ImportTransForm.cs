@@ -52,7 +52,6 @@ namespace MoneyTracker
             {
                 MessageBox.Show("Sorry, something went wrong", "Something went wrong", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Debug.WriteLine(ex);
-                Debugger.Break();
             }
         }
 
@@ -71,7 +70,6 @@ namespace MoneyTracker
             {
                 MessageBox.Show("Sorry, something went wrong", "Something went wrong", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Debug.WriteLine(ex);
-                Debugger.Break();
             }
         }
 

@@ -13,28 +13,33 @@ namespace MoneyTracker.CustomControls
             TextAlign = HorizontalAlignment.Right;
         }
 
-        protected override void OnTextChanged(EventArgs e)
-        {
-            if (IsDecimal())
-                base.OnTextChanged(e);
-        }
-
         protected override void OnKeyPress(KeyPressEventArgs e)
         {
-            if (!char.IsNumber(e.KeyChar)
-                && ((Keys)e.KeyChar != Keys.Back)
-                && (e.KeyChar != '.')
-                && (e.KeyChar != '-'))
+            if (char.IsControl(e.KeyChar))
             {
-                e.Handled = true;
+                base.OnKeyPress(e);
+                return;
             }
 
-            if (e.KeyChar == '.' && Text.IndexOf('.') > 0)
+            if (char.IsDigit(e.KeyChar))
             {
-                e.Handled = true;
-
+                base.OnKeyPress(e);
+                return;
             }
 
+            if (e.KeyChar == '.' && !Text.Contains('.'))
+            {
+                base.OnKeyPress(e);
+                return;
+            }
+
+            if (e.KeyChar == '-' && SelectionStart == 0 && !Text.Contains('-'))
+            {
+                base.OnKeyPress(e);
+                return;
+            }
+
+            e.Handled = true;
             base.OnKeyPress(e);
         }
 
@@ -72,21 +77,16 @@ namespace MoneyTracker.CustomControls
 
         private bool IsDecimalZero()
         {
-            return (decimal.Parse(Text) == 0);
+            return decimal.TryParse(Text, out var value) && value == 0;
         }
 
         public decimal? Value
         {
             get
             {
-                if (!string.IsNullOrWhiteSpace(Text))
-                {
-                    return decimal.Parse(Text);
-                }
-                else
-                {
-                    return null;
-                }
+                return decimal.TryParse(Text, out var value)
+                    ? value
+                    : null;
             }
         }
 
@@ -94,14 +94,9 @@ namespace MoneyTracker.CustomControls
         {
             get
             {
-                if (!string.IsNullOrWhiteSpace(Text))
-                {
-                    return decimal.Parse(Text);
-                }
-                else
-                {
-                    return 0;
-                }
+                return decimal.TryParse(Text, out var value)
+                    ? value
+                    : 0;
             }
         }
     }

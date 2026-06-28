@@ -1,8 +1,11 @@
-﻿using Microsoft.Extensions.Configuration;
-using MoneyTracker.Core.Services;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+
+using Microsoft.Extensions.Configuration;
+
+using MoneyTracker.Core.Services;
 
 namespace MoneyTracker
 {
@@ -21,7 +24,10 @@ namespace MoneyTracker
 
         private void MainForm_Shown(object sender, EventArgs e)
         {
-            cboAccounts.DataSource = _databaseService.GetAccounts().Where(a => !a.Obsolete).ToList();
+            var accounts = _databaseService.GetAccounts()?.Where(a => !a.Obsolete).ToList()
+                ?? new List<Data.Entities.Account>();
+
+            cboAccounts.DataSource = accounts;
             cboAccounts.DisplayMember = "Description";
             cboAccounts.ValueMember = "AccountId";
 
@@ -40,6 +46,11 @@ namespace MoneyTracker
 
         private void btnImportTrans_Click(object sender, EventArgs e)
         {
+            if (cboAccounts.SelectedValue == null)
+            {
+                return;
+            }
+
             var form = new ImportTransForm(_databaseService)
             {
                 AccountId = (int)cboAccounts.SelectedValue
@@ -57,6 +68,11 @@ namespace MoneyTracker
 
         private void GetMaxDates()
         {
+            if (cboAccounts.SelectedValue == null)
+            {
+                return;
+            }
+
             const string dateFormatForDisplay = "dd/MM/yyyy";
             lblMaxTrans.Text = _databaseService.GetMaxTransactionDate((int)cboAccounts.SelectedValue)?.ToString(dateFormatForDisplay);
             lblMaxPaySlip.Text = _databaseService.GetMaxPaySlipDate()?.ToString(dateFormatForDisplay);

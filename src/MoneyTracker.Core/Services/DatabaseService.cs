@@ -1,8 +1,9 @@
-﻿using MoneyTracker.Data.Contexts;
-using MoneyTracker.Data.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using MoneyTracker.Data.Contexts;
+using MoneyTracker.Data.Entities;
 
 namespace MoneyTracker.Core.Services
 {
@@ -63,9 +64,8 @@ namespace MoneyTracker.Core.Services
                 {
                     db.Transactions.Add(trans);
                 }
-                SaveChangesSafely(db);
+                return SaveChangesSafely(db);
             }
-            return true;
         }
 
         public bool WritePaySlip(PaySlip paySlip)
@@ -73,16 +73,16 @@ namespace MoneyTracker.Core.Services
             using (var db = new Context(_connStr))
             {
                 db.PaySlips.Add(paySlip);
-                SaveChangesSafely(db);
+                return SaveChangesSafely(db);
             }
-            return true;
         }
 
-        private void SaveChangesSafely(Context db)
+        private bool SaveChangesSafely(Context db)
         {
             try
             {
                 db.SaveChanges();
+                return true;
             }
             catch (System.Data.Entity.Validation.DbEntityValidationException ex1)
             {
@@ -92,7 +92,6 @@ namespace MoneyTracker.Core.Services
                     {
                         var validationError = eve.Entry.Entity + " had error: " + ve.ErrorMessage;
                         System.Diagnostics.Debug.WriteLine(validationError);
-                        System.Diagnostics.Debugger.Break();
                     }
                 }
             }
@@ -100,8 +99,9 @@ namespace MoneyTracker.Core.Services
             {
                 var actualException = ex2.InnerException?.InnerException;
                 System.Diagnostics.Debug.WriteLine(actualException);
-                System.Diagnostics.Debugger.Break();
             }
+
+            return false;
         }
 
         public DateTime? GetMaxTransactionDate(int accountId)
@@ -152,8 +152,7 @@ namespace MoneyTracker.Core.Services
                 if (trans != null && trans.CategoryId != categoryId)
                 {
                     trans.CategoryId = categoryId;
-                    SaveChangesSafely(db);
-                    return true;
+                    return SaveChangesSafely(db);
                 }
                 return false;
             }
